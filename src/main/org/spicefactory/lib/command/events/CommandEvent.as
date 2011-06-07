@@ -15,6 +15,9 @@
  */
 
 package org.spicefactory.lib.command.events {
+
+import org.spicefactory.lib.command.Command;
+
 import flash.events.Event;
 	
 /**
@@ -34,6 +37,10 @@ public class CommandEvent extends Event {
 	
     function CommandEvent (type:String) {
         super(type);
+    }
+    
+    public function get command () : Command {
+    	return target as Command;
     }
 	
 	

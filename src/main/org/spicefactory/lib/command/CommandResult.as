@@ -13,39 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.spicefactory.lib.command.events {
-import org.spicefactory.lib.command.CommandResult;
+ 
+package org.spicefactory.lib.command {
 	
 /**
- * 
- * 
  * @author Jens Halm
  */
-public class CommandResultEvent extends CommandEvent implements CommandResult {
+public interface CommandResult {
 	
 	
-	public static const COMPLETE:String = "complete";
-
-	public static const ERROR:String = "error";
+	function get command () : Command;
+	
+	function get value () : Object;
+	
+	function get complete () : Boolean;
 	
 	
-    private var _result:Object;
-    
-    function CommandResultEvent (type:String, result:Object) {
-        super(type);
-        _result = result;
-    }
-    
-    public function get value () : Object {
-        return _result;
-    }
-    
-    public function get complete () : Boolean {
-    	return (type == COMPLETE);
-    }
-    
-    
 }
-	
 }

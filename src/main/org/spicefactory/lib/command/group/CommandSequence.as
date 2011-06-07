@@ -18,6 +18,7 @@ package org.spicefactory.lib.command.group {
 
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandGroup;
+import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
 import org.spicefactory.lib.logging.LogContext;
 import org.spicefactory.lib.logging.Logger;
@@ -70,18 +71,18 @@ public class CommandSequence extends AbstractCommandExecutor implements CommandG
 	/**
 	 * @private
 	 */
-	protected override function commandComplete (com:Command, result:Object) : void {
+	protected override function commandComplete (com:Command, result:CommandResult) : void {
 		currentIndex++;
 		nextCommand();
 	}
 	
 	private function nextCommand () : void {
 		if (commands.length == currentIndex) {
-			logger.info("Completed all commands");
+			logger.info("Completed all commands in {0}", this);
 			complete();
 		} else {
 			var com:Command = commands[currentIndex] as Command;
-			logger.info("Executing next command: " + com);
+			logger.info("Executing next command {0} in sequence {1}", com, this);
 			executeCommand(com);
 		}
 	}	

@@ -17,6 +17,7 @@ package org.spicefactory.lib.command.group {
 
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandGroup;
+import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
 	
 /**
@@ -74,7 +75,7 @@ public class ParallelCommands extends AbstractCommandExecutor implements Command
 	/**
 	 * @private
 	 */
-	protected override function commandComplete (com:Command, result:Object) : void {
+	protected override function commandComplete (com:Command, result:CommandResult) : void {
 		if (++completed == commands.length) complete();
 	}		
 	
