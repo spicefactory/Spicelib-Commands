@@ -208,9 +208,11 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	 * @private
 	 */
 	protected override function doCancel () : void {
-		for each (var com:CancellableCommand in activeCommands) {
+		for each (var com:AsyncCommand in activeCommands) {
 			removeListeners(AsyncCommand(com));
-			com.cancel();
+			if (CommandUtil.isCancellable(com)) {
+				CancellableCommand(com).cancel();
+			}
 		}
 		activeCommands.removeAll();
 	}
