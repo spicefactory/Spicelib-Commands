@@ -25,7 +25,5 @@ public interface CommandFlow extends CommandExecutor {
 	
 	function setFirstCommand (command:Command, link:CommandLink) : void;
 
-    function get activeCommand () : Command;
-	
 }
 }

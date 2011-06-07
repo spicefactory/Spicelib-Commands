@@ -25,7 +25,5 @@ public interface CommandGroup extends CommandExecutor {
 	
 	function addCommand (command:Command) : void;
     
-    function get activeCommands () : Array;
-	
 }
 }
