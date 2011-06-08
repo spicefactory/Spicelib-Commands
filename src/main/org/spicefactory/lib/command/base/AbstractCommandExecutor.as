@@ -100,7 +100,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		
 		if (!(com is AsyncCommand)) {
 			activeCommands.remove(com);
-			commandComplete(com, DefaultCommandResult.forCompletion(com, null));
+			commandComplete(DefaultCommandResult.forCompletion(com, null));
 		}
 	}
 	
@@ -128,7 +128,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	private function commandCompleteHandler (event:CommandResultEvent) : void {
 		var com:AsyncCommand = event.target as AsyncCommand;
 		removeActiveCommand(com);
-		commandComplete(com, event);
+		commandComplete(event);
 	}
 	
 	/**
@@ -140,19 +140,19 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	 * @param com the command that has completed its operation
 	 * @param result the result of the command in case of successful completion
 	 */
-	protected function commandComplete (com:Command, result:CommandResult) : void {
+	protected function commandComplete (result:CommandResult) : void {
 		/* default implementation does nothing */ 
 	}
 	
 	private function commandErrorHandler (event:CommandResultEvent) : void {
 		var com:AsyncCommand = event.target as AsyncCommand;
 		removeActiveCommand(com);
-		commandError(com, event);
+		commandError(com, event.value);
 	}
 	
 	private function commandError (com:Command, cause:Object) : void {
 		if (ignoreErrors) {
-			commandComplete(com, null);
+			commandComplete(DefaultCommandResult.forError(com, cause));
 		} else {
 			doCancel();
 			error(new CommandExecutorFailure(this, com, cause));
@@ -163,7 +163,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		var com:AsyncCommand = event.target as AsyncCommand;
 		removeActiveCommand(com);
 		if (ignoreCancellations) {
-			commandComplete(com, DefaultCommandResult.forCancellation(com));
+			commandComplete(DefaultCommandResult.forCancellation(com));
 		}
 		else {
 			cancel();

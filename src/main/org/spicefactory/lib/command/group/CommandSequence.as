@@ -71,7 +71,7 @@ public class CommandSequence extends AbstractCommandExecutor implements CommandG
 	/**
 	 * @private
 	 */
-	protected override function commandComplete (com:Command, result:CommandResult) : void {
+	protected override function commandComplete (result:CommandResult) : void {
 		currentIndex++;
 		nextCommand();
 	}

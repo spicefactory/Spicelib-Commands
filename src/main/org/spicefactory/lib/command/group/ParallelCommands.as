@@ -75,7 +75,7 @@ public class ParallelCommands extends AbstractCommandExecutor implements Command
 	/**
 	 * @private
 	 */
-	protected override function commandComplete (com:Command, result:CommandResult) : void {
+	protected override function commandComplete (result:CommandResult) : void {
 		if (++completed == commands.length) complete();
 	}		
 	
