@@ -41,8 +41,8 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	private var activeCommands:List = new List();
 	
-	private var ignoreErrors:Boolean;
-	private var ignoreCancellations:Boolean;
+	private var processErrors:Boolean;
+	private var processCancellations:Boolean;
 	
 	
 	/**
@@ -151,7 +151,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	}
 	
 	private function commandError (com:Command, cause:Object) : void {
-		if (ignoreErrors) {
+		if (processErrors) {
 			commandComplete(DefaultCommandResult.forError(com, cause));
 		} else {
 			doCancel();
@@ -162,7 +162,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	private function commandCancelledHandler (event:CommandEvent) : void {
 		var com:AsyncCommand = event.target as AsyncCommand;
 		removeActiveCommand(com);
-		if (ignoreCancellations) {
+		if (processCancellations) {
 			commandComplete(DefaultCommandResult.forCancellation(com));
 		}
 		else {
