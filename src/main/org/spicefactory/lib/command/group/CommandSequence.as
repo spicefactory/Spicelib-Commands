@@ -49,8 +49,9 @@ public class CommandSequence extends AbstractCommandExecutor implements CommandG
 	 * Creates a new sequence.
 	 * 
 	 */	
-	function CommandSequence (description:String = null) {
-		super(description);
+	function CommandSequence (description:String = null, 
+			skipErrors:Boolean = false, skipCancelllations:Boolean = false) {
+		super(description, skipErrors, skipCancelllations);
 	}
 	
 	/**

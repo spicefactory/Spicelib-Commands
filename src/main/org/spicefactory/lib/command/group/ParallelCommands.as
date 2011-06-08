@@ -44,8 +44,9 @@ public class ParallelCommands extends AbstractCommandExecutor implements Command
 	 * Creates a new instance.
 	 * 
 	 */
-	function ParallelCommands (description:String = null) {
-		super(description);
+	function ParallelCommands (description:String = null, 
+			skipErrors:Boolean = false, skipCancelllations:Boolean = false) {
+		super(description, skipErrors, skipCancelllations);
 	}
 	
 	/**
