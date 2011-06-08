@@ -36,7 +36,7 @@ public class CommandTimeout {
 	 * @private
 	 */
 	public function toString () : String {
-		return "[CommandTimeout " + _timeout + " ms]";
+		return "[CommandTimeout(" + _timeout + " ms)]";
 	}
 	
 	
