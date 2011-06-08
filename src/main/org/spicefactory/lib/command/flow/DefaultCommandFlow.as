@@ -114,6 +114,7 @@ public class DefaultCommandFlow extends AbstractCommandExecutor implements Comma
 }
 
 
+import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandLinkProcessor;
 
@@ -135,23 +136,30 @@ class Processor implements CommandLinkProcessor {
 	}
 
 	public function execute (command:Command) : void {
-		processed = true;
+		process();
 		executeCallback(command);
 	}
 
 	public function complete () : void {
-		processed = true;
+		process();
 		completeCallback();
 	}
 
 	public function cancel () : void {
-		processed = true;
+		process();
 		cancelCallback();
 	}
 
 	public function error (cause:Object) : void {
-		processed = true;
+		process();
 		errorCallback(cause);
+	}
+	
+	private function process () : void {
+		if (processed) {
+			throw new IllegalStateError("This CommandLinkProcessor has already completed");
+		}
+		processed = true;
 	}
 
 	
