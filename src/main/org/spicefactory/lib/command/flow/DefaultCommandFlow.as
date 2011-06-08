@@ -46,7 +46,7 @@ public class DefaultCommandFlow extends AbstractCommandExecutor implements Comma
 	 * 
 	 */	
 	function DefaultCommandFlow (description:String = null) {
-		super(description);
+		super(description, true, true);
 	}
 	
 	
