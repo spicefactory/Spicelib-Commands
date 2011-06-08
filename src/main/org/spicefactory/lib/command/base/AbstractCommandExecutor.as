@@ -49,8 +49,10 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	 * 
 	 */
 	function AbstractCommandExecutor (description:String = null, 
-			ignoreErrors:Boolean = false, ignoreCancellations:Boolean = false) {
+			processErrors:Boolean = false, processCancellations:Boolean = false) {
 		super(description);
+		this.processErrors = processErrors;
+		this.processCancellations = processCancellations;
 	}
 
 	/**
