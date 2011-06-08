@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+ 
 package org.spicefactory.lib.command {
 	
 /**
- * 
- * 
  * @author Jens Halm
  */
-public interface CommandFlow extends CommandExecutor {
+public interface CommandLinkProcessor {
 	
-	function addLink (command:Command, link:CommandLink) : void;
-
-	function setDefaultLink (link:CommandLink) : void;
-
+	
+	function execute (command:Command) : void;
+	
+	function complete () : void;
+	
+	function cancel () : void;
+	
+	function error (cause:Object) : void;
+	
+	
 }
 }

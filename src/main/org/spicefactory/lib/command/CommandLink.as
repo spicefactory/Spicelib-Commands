@@ -15,8 +15,6 @@
  */
 
 package org.spicefactory.lib.command {
-
-import org.spicefactory.lib.command.events.CommandResultEvent;
 	
 /**
  * 
@@ -25,7 +23,9 @@ import org.spicefactory.lib.command.events.CommandResultEvent;
  */
 public interface CommandLink {
 	
-	function link (event:CommandResultEvent) : Command;
+
+	function link (result:CommandResult, processor:CommandLinkProcessor) : void;
+	
 	
 }
 }

@@ -29,6 +29,7 @@ public class DefaultCommandResult implements CommandResult {
 	private var _value:Object;
 	private var _success:Boolean;
 
+
 	function DefaultCommandResult (command:Command, value:Object = null, success:Boolean = true) {
 		_command = command;
 		_value = value;
@@ -58,5 +59,14 @@ public class DefaultCommandResult implements CommandResult {
 	public function get complete () : Boolean {
 		return false;
 	}
+	
+	/**
+	 * @private
+	 */
+	public function toString () : String {
+		return "CommandResult: value = " + value + ", command = " + command;
+	}
+	
+	
 }
 }
