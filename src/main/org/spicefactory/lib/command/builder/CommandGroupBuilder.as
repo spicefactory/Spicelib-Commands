@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.CommandGroup;
 import org.spicefactory.lib.command.CommandProxy;
 import org.spicefactory.lib.command.group.CommandSequence;
@@ -62,9 +63,8 @@ public class CommandGroupBuilder extends AbstractCommandBuilder {
 	}
 	
 	public function lastResult (callback:Function) : CommandGroupBuilder {
-		// TODO - new CommandData interface
-		var f:Function = function (data:Object) : void {
-			callback(data.getObject());
+		var f:Function = function (data:CommandData) : void {
+			callback(data.getLastResult());
 		};
 		addResultCallback(f);
 		return this;

@@ -20,6 +20,7 @@ import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandFlow;
 import org.spicefactory.lib.command.CommandLink;
 import org.spicefactory.lib.command.CommandProxy;
+import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.flow.DefaultCommandFlow;
 import org.spicefactory.lib.logging.LogUtil;
 import org.spicefactory.lib.util.collection.Map;
@@ -57,9 +58,8 @@ public class CommandFlowBuilder extends AbstractCommandBuilder {
 	}
 	
 	public function lastResult (callback:Function) : CommandFlowBuilder {
-		// TODO - new CommandData interface
-		var f:Function = function (data:Object) : void {
-			callback(data.getObject());
+		var f:Function = function (data:CommandData) : void {
+			callback(data.getLastResult());
 		};
 		addResultCallback(f);
 		return this;

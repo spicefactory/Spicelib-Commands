@@ -15,16 +15,17 @@
  */
 package org.spicefactory.lib.command.base {
 
-import org.spicefactory.lib.command.events.CommandExecutorFailure;
-import org.spicefactory.lib.command.*;
-import org.spicefactory.lib.command.base.AbstractSuspendableCommand;
-import org.spicefactory.lib.command.events.CommandEvent;
-import org.spicefactory.lib.command.events.CommandResultEvent;
-import org.spicefactory.lib.command.util.CommandUtil;
-import org.spicefactory.lib.errors.IllegalStateError;
-import org.spicefactory.lib.logging.LogContext;
-import org.spicefactory.lib.logging.Logger;
-import org.spicefactory.lib.util.collection.List;
+import org.spicefactory.lib.command.data.DefaultCommandData;
+	import org.spicefactory.lib.command.*;
+	import org.spicefactory.lib.command.data.CommandData;
+	import org.spicefactory.lib.command.events.CommandEvent;
+	import org.spicefactory.lib.command.events.CommandExecutorFailure;
+	import org.spicefactory.lib.command.events.CommandResultEvent;
+	import org.spicefactory.lib.command.util.CommandUtil;
+	import org.spicefactory.lib.errors.IllegalStateError;
+	import org.spicefactory.lib.logging.LogContext;
+	import org.spicefactory.lib.logging.Logger;
+	import org.spicefactory.lib.util.collection.List;
 
 /**
  * Abstract base class for CommandGroup implementations.
@@ -40,6 +41,8 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	
 	private var activeCommands:List = new List();
+	
+	private var data:DefaultCommandData = new DefaultCommandData();
 	
 	private var processErrors:Boolean;
 	private var processCancellations:Boolean;
@@ -130,6 +133,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	private function commandCompleteHandler (event:CommandResultEvent) : void {
 		var com:AsyncCommand = event.target as AsyncCommand;
 		removeActiveCommand(com);
+		data.addValue(event.value);
 		commandComplete(event);
 	}
 	
@@ -170,6 +174,16 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		else {
 			cancel();
 		}
+	}
+	
+	/**
+	 * @private
+	 */
+	protected override function complete (result:Object = undefined) : void {
+		if (result === undefined) {
+			result = data;
+		}
+ 		super.complete(result);
 	}
 
 	/**
