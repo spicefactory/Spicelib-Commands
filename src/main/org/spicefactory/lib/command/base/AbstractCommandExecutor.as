@@ -15,17 +15,19 @@
  */
 package org.spicefactory.lib.command.base {
 
+import org.spicefactory.lib.command.*;
+import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.data.DefaultCommandData;
-	import org.spicefactory.lib.command.*;
-	import org.spicefactory.lib.command.data.CommandData;
-	import org.spicefactory.lib.command.events.CommandEvent;
-	import org.spicefactory.lib.command.events.CommandExecutorFailure;
-	import org.spicefactory.lib.command.events.CommandResultEvent;
-	import org.spicefactory.lib.command.util.CommandUtil;
-	import org.spicefactory.lib.errors.IllegalStateError;
-	import org.spicefactory.lib.logging.LogContext;
-	import org.spicefactory.lib.logging.Logger;
-	import org.spicefactory.lib.util.collection.List;
+import org.spicefactory.lib.command.events.CommandEvent;
+import org.spicefactory.lib.command.events.CommandExecutorFailure;
+import org.spicefactory.lib.command.events.CommandResultEvent;
+import org.spicefactory.lib.command.lifecycle.CommandLifecycle;
+import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
+import org.spicefactory.lib.command.util.CommandUtil;
+import org.spicefactory.lib.errors.IllegalStateError;
+import org.spicefactory.lib.logging.LogContext;
+import org.spicefactory.lib.logging.Logger;
+import org.spicefactory.lib.util.collection.List;
 
 /**
  * Abstract base class for CommandGroup implementations.
@@ -42,7 +44,9 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	private var activeCommands:List = new List();
 	
-	private var data:DefaultCommandData = new DefaultCommandData();
+	private var _data:DefaultCommandData = new DefaultCommandData();
+	
+	private var _lifecycle:CommandLifecycle;
 	
 	private var processErrors:Boolean;
 	private var processCancellations:Boolean;
@@ -79,6 +83,29 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	}
 	
 	/**
+	 * @inheritDoc
+	 */	
+	public function get lifecycle () : CommandLifecycle {
+		if (!_lifecycle) {
+			_lifecycle = new DefaultCommandLifecycle();
+		}
+		return _lifecycle;
+	}
+    
+    public function set lifecycle (value:CommandLifecycle) : void {
+    	_lifecycle = value;
+    }
+    
+    /**
+     * The data associated with this executor.
+     * Contains any results from previously executed commands or
+     * data specified upfront.
+     */
+    protected function get data () : CommandData {
+    	return _data;
+    }
+	
+	/**
 	 * Executes the specified command.
 	 * 
 	 * @param com the command to execute
@@ -94,7 +121,12 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 			if (async.active) return;
 		}
 		
+		if (com is CommandExecutor) {
+			CommandExecutor(com).lifecycle = lifecycle;
+		}
+		
 		try {
+			lifecycle.beforeExecution(com, data);
 			com.execute();
 		}
 		catch (e:Error) {
@@ -105,6 +137,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		
 		if (!(com is AsyncCommand)) {
 			activeCommands.remove(com);
+			lifecycle.afterCompletion(com);
 			commandComplete(DefaultCommandResult.forCompletion(com, null));
 		}
 	}
@@ -128,12 +161,13 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		}
 		removeListeners(com);
 		activeCommands.remove(com);
+		lifecycle.afterCompletion(com);
 	}
 
 	private function commandCompleteHandler (event:CommandResultEvent) : void {
 		var com:AsyncCommand = event.target as AsyncCommand;
 		removeActiveCommand(com);
-		data.addValue(event.value);
+		_data.addValue(event.value);
 		commandComplete(event);
 	}
 	

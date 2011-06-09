@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandProxy;
 import org.spicefactory.lib.command.base.AbstractCancellableCommand;
@@ -93,7 +94,10 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 			throw IllegalStateError("Either target or type property must be set");
 		}
 		if (!_target) {
-			_target = new _type(); // TODO - delegate to pluggable lifecycle
+			var target:Object = lifecycle.createInstance(_type, data);
+			_target = (target is Command)
+				? target as Command
+				: CommandAdapters.createAdapter(target);
 		}
 		executeCommand(_target);
 		startTimer();

@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package org.spicefactory.lib.command {
-import org.spicefactory.lib.command.lifecycle.CommandLifecycle;
+package org.spicefactory.lib.command.lifecycle {
+
+import org.spicefactory.lib.command.data.CommandData;
 	
 /**
- * 
- * 
  * @author Jens Halm
  */
-public interface CommandExecutor extends SuspendableCommand {
+public interface CommandLifecycle {
 	
 	
-	function get cancellable () : Boolean;
-    
-    function get suspendable () : Boolean;
-    
-    function get lifecycle () : CommandLifecycle;
-    
-    function set lifecycle (value:CommandLifecycle) : void;
+	function createInstance (type:Class, data:CommandData) : Object;
+	
+	function beforeExecution (command:Object, data:CommandData) : void;
+	
+	function afterCompletion (command:Object) : void;
 	
 	
 }
