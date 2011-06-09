@@ -16,7 +16,6 @@
  
 package org.spicefactory.lib.command.builder {
 
-import org.spicefactory.lib.command.CommandFactory;
 import org.spicefactory.lib.logging.LogUtil;
 	
 /**
@@ -26,8 +25,8 @@ public class CommandProxyBuilder extends AbstractCommandBuilder {
 	
 	
 	function CommandProxyBuilder (target:Object) {
-		if (target is CommandFactory) {
-			setFactory(target as CommandFactory);
+		if (target is Class) {
+			setType(target as Class);
 		}
 		else {
 			setTarget(asCommand(target));

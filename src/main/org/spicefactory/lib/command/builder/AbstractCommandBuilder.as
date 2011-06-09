@@ -16,12 +16,11 @@
 
 package org.spicefactory.lib.command.builder {
 
-	import org.spicefactory.lib.reflect.ClassInfo;
-	import org.spicefactory.lib.command.Command;
-	import org.spicefactory.lib.command.CommandFactory;
-	import org.spicefactory.lib.command.CommandProxy;
-	import org.spicefactory.lib.command.events.CommandEvent;
-	import org.spicefactory.lib.command.events.CommandResultEvent;
+import org.spicefactory.lib.command.Command;
+import org.spicefactory.lib.command.CommandProxy;
+import org.spicefactory.lib.command.adapter.CommandAdapters;
+import org.spicefactory.lib.command.events.CommandEvent;
+import org.spicefactory.lib.command.events.CommandResultEvent;
 	
 /**
  * @author Jens Halm
@@ -36,8 +35,8 @@ public class AbstractCommandBuilder implements CommandBuilder {
 		proxy.target = target;
 	}
 	
-	protected function setFactory (factory:CommandFactory) : void {
-		proxy.factory = factory;
+	protected function setType (type:Class) : void {
+		proxy.type = type;
 	}
 	
 	protected function setTimeout (milliseconds:uint) : void {
@@ -73,16 +72,10 @@ public class AbstractCommandBuilder implements CommandBuilder {
 		else if (command is CommandBuilder) {
 			return CommandBuilder(command).build();
 		}
-		var type:ClassInfo;
-		if (command is Class) {
-			type = ClassInfo.forClass(command as Class);
-		}
 		else {
-			type = ClassInfo.forInstance(command);
+			return CommandAdapters.createAdapter(command);
 		}
 		// TODO - handle ApplicationDomains
-		// TODO - create adapter
-		return null;
 	}
 	
 	public function execute () : CommandProxy {

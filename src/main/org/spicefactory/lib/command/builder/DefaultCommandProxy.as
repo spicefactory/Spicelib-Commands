@@ -17,7 +17,6 @@
 package org.spicefactory.lib.command.builder {
 
 import org.spicefactory.lib.command.Command;
-import org.spicefactory.lib.command.CommandFactory;
 import org.spicefactory.lib.command.CommandProxy;
 import org.spicefactory.lib.command.base.AbstractCancellableCommand;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
@@ -30,6 +29,7 @@ import org.spicefactory.lib.logging.Logger;
 
 import flash.events.TimerEvent;
 import flash.utils.Timer;
+
 	
 /**
  * @author Jens Halm
@@ -41,7 +41,7 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 	
 	
 	private var _target:Command;
-	private var _factory:CommandFactory;
+	private var _type:Class;
 	
 	private var timer : Timer;
 	private var _timeout:uint;
@@ -66,8 +66,8 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 		_target = value;
 	}
 	
-	public function set factory (value:CommandFactory) : void {
-		_factory = value;
+	public function set type (value:Class) : void {
+		_type = value;
 	}
 	
 	public function set description (value:String) : void {
@@ -89,11 +89,11 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 	 * @private
 	 */
 	protected override function doExecute () : void {
-		if (!_target && !_factory) {
-			throw IllegalStateError("Either target or factory property must be set");
+		if (!_target && !_type) {
+			throw IllegalStateError("Either target or type property must be set");
 		}
 		if (!_target) {
-			_target = _factory.createCommand();
+			_target = new _type(); // TODO - delegate to pluggable lifecycle
 		}
 		executeCommand(_target);
 		startTimer();

@@ -30,8 +30,7 @@ public class Commands {
 	}
 	
 	public static function create (commandType:Class) : CommandProxyBuilder {
-		// TODO - use adpater factory if type does not implement Command
-		return new CommandProxyBuilder(new DefaultCommandFactory(commandType));
+		return new CommandProxyBuilder(commandType);
 	}
 	
 	public static function delegate (commandFunction:Function, ...params) : CommandProxyBuilder {

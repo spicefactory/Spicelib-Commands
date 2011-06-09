@@ -14,29 +14,17 @@
  * limitations under the License.
  */
 
-package org.spicefactory.lib.command.builder {
+package org.spicefactory.lib.command.adapter {
 
-import org.spicefactory.lib.command.Command;
-import org.spicefactory.lib.command.CommandFactory;
+import org.spicefactory.lib.command.CommandAdapter;
 	
 /**
  * @author Jens Halm
  */
-public class DefaultCommandFactory implements CommandFactory {
-
-
-	private var type:Class;
-
-
-	public function DefaultCommandFactory (type:Class) {
-		this.type = type;
-	}
-
-
-	public function createCommand () : Command {
-		// TODO - handle constructor injections
-		return new type();
-	}
+public interface CommandAdapterFactory {
+	
+	
+	function createAdapter (instance:Object) : CommandAdapter;
 	
 	
 }
