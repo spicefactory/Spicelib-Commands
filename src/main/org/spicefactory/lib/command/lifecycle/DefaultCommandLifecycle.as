@@ -32,7 +32,7 @@ public class DefaultCommandLifecycle implements CommandLifecycle {
 		var info:ClassInfo = ClassInfo.forClass(type); // TODO - handle ApplicationDomains
 		var params:Array = [];
 		for each (var param:Parameter in info.getConstructor().parameters) {
-			var value:Object = data.getLastResult(param.type.getClass());
+			var value:Object = data.getObject(param.type.getClass());
 			if (value) {
 				params.push(value);
 			}

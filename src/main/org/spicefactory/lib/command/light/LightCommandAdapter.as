@@ -76,7 +76,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 				async = true;
 				params.push(callback);
 			}
-			var value:Object = _data.getLastResult(param.type.getClass());
+			var value:Object = _data.getObject(param.type.getClass());
 			if (value) {
 				params.push(value);
 			}

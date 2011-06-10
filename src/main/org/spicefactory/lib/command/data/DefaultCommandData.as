@@ -31,7 +31,7 @@ public class DefaultCommandData implements CommandData {
 	}
 
 
-	public function getLastResult (type:Class = null) : Object {
+	public function getObject (type:Class = null) : Object {
 		type ||= Object;
 		for (var i:int = data.length - 1; i >= 0; i--) {
 			if (data[i] is type) return data[i];
@@ -39,7 +39,7 @@ public class DefaultCommandData implements CommandData {
 		return null;
 	}
 
-	public function getAllResults (type:Class = null) : Array {
+	public function getAllObjects (type:Class = null) : Array {
 		if (!type) return data.concat();
 		var results:Array = [];
 		for each (var value:Object in data) {

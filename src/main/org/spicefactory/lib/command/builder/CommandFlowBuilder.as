@@ -59,7 +59,7 @@ public class CommandFlowBuilder extends AbstractCommandBuilder {
 	
 	public function lastResult (callback:Function) : CommandFlowBuilder {
 		var f:Function = function (data:CommandData) : void {
-			callback(data.getLastResult());
+			callback(data.getObject());
 		};
 		addResultCallback(f);
 		return this;

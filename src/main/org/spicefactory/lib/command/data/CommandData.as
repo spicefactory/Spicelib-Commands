@@ -21,10 +21,9 @@ package org.spicefactory.lib.command.data {
  */
 public interface CommandData {
 	
-	
- 	function getLastResult (type:Class = null) : Object;
+ 	function getObject (type:Class = null) : Object;
  	
- 	function getAllResults (type:Class = null) : Array;
+ 	function getAllObjects (type:Class = null) : Array;
  	
  	
 }
