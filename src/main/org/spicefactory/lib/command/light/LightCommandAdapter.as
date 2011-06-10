@@ -46,6 +46,13 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	private var _data:CommandData; // TODO - obtain data from parent
 	
 	
+	private static const errorTypes:Array = [Error, ErrorEvent];
+	
+	public static function addErrorType (type:Class) : void {
+		errorTypes.push(type);
+	}
+ 	
+	
 	function LightCommandAdapter (target:Object, info:ClassInfo) {
 		_target = target;
 		executeMethod = info.getMethod("execute");
@@ -119,14 +126,20 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 			// do not call cancel to bypass doCancel
 			dispatchEvent(new CommandEvent(CommandEvent.CANCEL));	
 		}
-		else if (result is Error || result is ErrorEvent) {
-			// TODO - add hook to extend this list of known error types
+		else if (isError(result)) {
 			error(result);
 		}
 		else {
 			complete(result);
 		}
 		_lifecycle.afterCompletion(target);
+ 	}
+ 	
+ 	private function isError (result:Object) : Boolean {
+ 		for each (var type:Class in errorTypes) {
+ 			if (result is type) return true;
+ 		}
+ 		return false;
  	}
 	
 	/**
