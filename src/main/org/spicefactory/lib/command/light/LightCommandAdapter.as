@@ -27,6 +27,7 @@ import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.reflect.ClassInfo;
 import org.spicefactory.lib.reflect.Method;
 import org.spicefactory.lib.reflect.Parameter;
+import org.spicefactory.lib.reflect.types.Void;
 
 import flash.events.ErrorEvent;
 	
@@ -93,8 +94,14 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 				executeMethod.invoke(target, params);
 			}
 			else {
-				var result:Object = executeMethod.invoke(target, params); // TODO - check void return type
-				complete(result);
+				if (executeMethod.returnType.getClass() == Void) {
+					var result:Object = executeMethod.invoke(target, params);
+					complete(result);
+				}
+				else {
+					executeMethod.invoke(target, params);
+					complete();
+				}
 				_lifecycle.afterCompletion(target);
 			}
 		}
