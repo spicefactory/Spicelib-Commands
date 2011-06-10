@@ -44,7 +44,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	private var activeCommands:List = new List();
 	
-	private var _data:DefaultCommandData = new DefaultCommandData();
+	private var _data:DefaultCommandData = new DefaultCommandData(); // TODO - handle parent/child hierarchies for data
 	
 	private var _lifecycle:CommandLifecycle;
 	
@@ -137,12 +137,13 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		
 		if (!(com is AsyncCommand)) {
 			activeCommands.remove(com);
-			lifecycle.afterCompletion(com);
 			commandComplete(DefaultCommandResult.forCompletion(com, null));
+			lifecycle.afterCompletion(com);
 		}
 	}
 	
 	private function addListeners (com:AsyncCommand) : void {
+		// TODO - check whether prio 1 has the desired effect
 		com.addEventListener(CommandResultEvent.COMPLETE, commandCompleteHandler, false, 1);
 		com.addEventListener(CommandResultEvent.ERROR, commandErrorHandler, false, 1);
 		com.addEventListener(CommandEvent.CANCEL, commandCancelledHandler, false, 1);
@@ -161,7 +162,6 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		}
 		removeListeners(com);
 		activeCommands.remove(com);
-		lifecycle.afterCompletion(com);
 	}
 
 	private function commandCompleteHandler (event:CommandResultEvent) : void {
@@ -169,6 +169,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		removeActiveCommand(com);
 		_data.addValue(event.value);
 		commandComplete(event);
+		lifecycle.afterCompletion(com);
 	}
 	
 	/**
@@ -197,6 +198,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 			doCancel();
 			error(new CommandExecutorFailure(this, com, cause));
 		}
+		lifecycle.afterCompletion(com);
 	}
 	
 	private function commandCancelledHandler (event:CommandEvent) : void {
@@ -208,6 +210,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		else {
 			cancel();
 		}
+		lifecycle.afterCompletion(com); // TODO - must be invoked after app callbacks have been processed
 	}
 	
 	/**
