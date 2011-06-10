@@ -39,6 +39,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 
 	private var _target:Object;
 	
+	private var async:Boolean;
 	private var executeMethod:Method;
 	private var cancelMethod:Method;
 	
@@ -53,13 +54,14 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	}
  	
 	
-	function LightCommandAdapter (target:Object, info:ClassInfo) {
+	function LightCommandAdapter (target:Object, info:ClassInfo, async:Boolean) {
 		_target = target;
 		executeMethod = info.getMethod("execute");
 		cancelMethod = info.getMethod("cancel");
 		if (cancelMethod.parameters.length > 0) {
 			cancelMethod = null;
 		}
+		this.async = async;
 	}
 
 
@@ -77,31 +79,13 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	
 	protected override function doExecute () : void {
 		_lifecycle.beforeExecution(target, new DefaultCommandData());
-		var params:Array = [];
-		var async:Boolean = false;
-		for each (var param:Parameter in executeMethod.parameters) {
-			if (param.type.getClass() == Function) {
-				async = true;
-				params.push(callback);
-			}
-			var value:Object = _data.getObject(param.type.getClass());
-			if (value) {
-				params.push(value);
-			}
-			else if (param.required) {
-				throw new IllegalStateError("No data available for required constructor parameter of type " 
-						+ param.type.name);
-			}
-			else {
-				params.push(undefined);
-			}
-		}
+		var params:Array = getParameters();
 		try {
 			if (async) {
 				executeMethod.invoke(target, params);
 			}
 			else {
-				if (executeMethod.returnType.getClass() == Void) {
+				if (executeMethod.returnType.getClass() != Void) {
 					var result:Object = executeMethod.invoke(target, params);
 					complete(result);
 				}
@@ -115,6 +99,26 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		catch (e:Error) {
 			error(e);
 			_lifecycle.afterCompletion(target);
+		}
+	}
+	
+	private function getParameters () : Array {
+		var params:Array = [];
+		for each (var param:Parameter in executeMethod.parameters) {
+			if (param.type.getClass() == Function) {
+				params.push(callback);
+			}
+			var value:Object = _data.getObject(param.type.getClass());
+			if (value) {
+				params.push(value);
+			}
+			else if (param.required) {
+				throw new IllegalStateError("No data available for required constructor parameter of type " 
+						+ param.type.name);
+			}
+			else {
+				params.push(undefined);
+			}
 		}
 	}
 	

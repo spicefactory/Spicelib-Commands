@@ -52,7 +52,7 @@ public class LightCommandAdapterFactory implements CommandAdapterFactory {
 				 + " must have a void return type");
 			}
 		}
-		return new LightCommandAdapter(instance, info);
+		return new LightCommandAdapter(instance, info, async);
 	}
 	
 	
