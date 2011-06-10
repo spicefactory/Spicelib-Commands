@@ -15,7 +15,10 @@
  */
  
 package org.spicefactory.lib.command.events {
+
 import org.spicefactory.lib.command.CommandExecutor;
+
+import flash.events.ErrorEvent;
 	
 /**
  * @author Jens Halm
@@ -53,7 +56,16 @@ public class CommandExecutorFailure {
 		if (!(cause is CommandExecutorFailure)) {
 			msg += "\nCause: Target command" + target + " failed.";
 		}
-		msg +=	"\nCause: " + cause; // TODO - format cause
+		msg +=	"\nCause: ";
+		if (cause is Error) {
+			msg += (cause as Error).getStackTrace();
+		}
+		else if (cause is ErrorEvent) {
+			msg += ErrorEvent(cause).text;
+		}
+		else {
+			msg += cause.toString();
+		}
 		return msg;
 	}
 	
