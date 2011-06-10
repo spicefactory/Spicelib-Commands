@@ -48,7 +48,7 @@ public class CommandGroupBuilder extends AbstractCommandBuilder {
 	}
 	
 	public function create (commandType:Class) : CommandGroupBuilder {
-		add(Commands.create(commandType)); // TODO - may alternatively defer the creation
+		add(commandType);
 		return this;
 	}
 	

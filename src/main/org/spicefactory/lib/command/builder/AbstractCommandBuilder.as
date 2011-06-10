@@ -72,6 +72,9 @@ public class AbstractCommandBuilder implements CommandBuilder {
 		else if (command is CommandBuilder) {
 			return CommandBuilder(command).build();
 		}
+		else if (command is Class) {
+			return Commands.create(command as Class).build();
+		}
 		else {
 			return CommandAdapters.createAdapter(command);
 		}
