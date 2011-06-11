@@ -16,7 +16,6 @@
 
 package org.spicefactory.lib.command.light {
 
-import flash.events.ErrorEvent;
 import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.base.AbstractSuspendableCommand;
 import org.spicefactory.lib.command.data.CommandData;
@@ -25,10 +24,12 @@ import org.spicefactory.lib.command.events.CommandEvent;
 import org.spicefactory.lib.command.lifecycle.CommandLifecycle;
 import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
 import org.spicefactory.lib.errors.IllegalStateError;
-import org.spicefactory.lib.reflect.ClassInfo;
 import org.spicefactory.lib.reflect.Method;
 import org.spicefactory.lib.reflect.Parameter;
+import org.spicefactory.lib.reflect.Property;
 import org.spicefactory.lib.reflect.types.Void;
+
+import flash.events.ErrorEvent;
 
 	
 /**
@@ -40,6 +41,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	private var _target:Object;
 	
 	private var async:Boolean;
+	private var callbackProperty:Property;
 	private var executeMethod:Method;
 	private var cancelMethod:Method;
 	
@@ -54,13 +56,12 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	}
  	
 	
-	function LightCommandAdapter (target:Object, info:ClassInfo, async:Boolean) {
+	function LightCommandAdapter (target:Object, executeMethod:Method, 
+			callback:Property, cancelMethod:Method, async:Boolean) {
 		_target = target;
-		executeMethod = info.getMethod("execute");
-		cancelMethod = info.getMethod("cancel");
-		if (cancelMethod.parameters.length > 0) {
-			cancelMethod = null;
-		}
+		this.callbackProperty = callbackProperty;
+		this.executeMethod = executeMethod;
+		this.cancelMethod = cancelMethod;
 		this.async = async;
 	}
 
@@ -106,6 +107,9 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	
 	protected override function doExecute () : void {
 		_lifecycle.beforeExecution(target, new DefaultCommandData());
+		if (callbackProperty) {
+			callbackProperty.setValue(target, callback);
+		}
 		var params:Array = getParameters();
 		try {
 			if (async) {

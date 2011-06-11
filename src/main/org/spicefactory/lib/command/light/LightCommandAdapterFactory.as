@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.light {
 
+import org.spicefactory.lib.reflect.Property;
 import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.adapter.CommandAdapterFactory;
 import org.spicefactory.lib.errors.IllegalStateError;
@@ -46,13 +47,21 @@ public class LightCommandAdapterFactory implements CommandAdapterFactory {
 				break;
 			}
 		}
+		var callback:Property = info.getProperty("callback");
+		if (callback.type.getClass() != Function) {
+			callback = null;
+		}
+		var cancel:Method = info.getMethod("cancel");
+		if (cancel.parameters.length > 0) {
+			cancel = null;
+		}
 		if (async) {
 			if (execute.returnType.getClass() != Void) {
 				throw new IllegalStateError("Asynchronous light commands with a callback parameter"
 				 + " must have a void return type");
 			}
 		}
-		return new LightCommandAdapter(instance, info, async);
+		return new LightCommandAdapter(instance, execute, callback, cancel, async);
 	}
 	
 	
