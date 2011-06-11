@@ -15,6 +15,8 @@
  */
 
 package org.spicefactory.lib.command {
+
+import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.lifecycle.CommandLifecycle;
 	
 /**
@@ -29,9 +31,7 @@ public interface CommandExecutor extends SuspendableCommand {
     
     function get suspendable () : Boolean;
     
-    function get lifecycle () : CommandLifecycle;
-    
-    function set lifecycle (value:CommandLifecycle) : void;
+    function prepare (lifecycle:CommandLifecycle, data:CommandData) : void;
 	
 	
 }

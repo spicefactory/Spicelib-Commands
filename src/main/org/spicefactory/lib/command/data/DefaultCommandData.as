@@ -24,7 +24,14 @@ public class DefaultCommandData implements CommandData {
 
 
 	private var data:Array = new Array();
+	private var parent:CommandData;
 	
+	private var inProgress:Boolean;
+	
+	
+	function DefaultCommandData (parent:CommandData = null) {
+		this.parent = parent; 
+	}
 	
 	public function addValue (value:Object) : void {
 		data.push(value);
@@ -32,20 +39,45 @@ public class DefaultCommandData implements CommandData {
 
 
 	public function getObject (type:Class = null) : Object {
+		if (inProgress) return null;
 		type ||= Object;
-		for (var i:int = data.length - 1; i >= 0; i--) {
-			if (data[i] is type) return data[i];
+		inProgress = true;
+		try {
+			for (var i:int = data.length - 1; i >= 0; i--) {
+				if (data[i] is type) {
+					return data[i];
+				}
+				else if (data[i] is CommandData) {
+					var result:Object = CommandData(data[i]).getObject(type);
+					if (result) return result;
+				}
+			}
+			return (parent) ? parent.getObject(type) : null; 
 		}
-		return null;
+		finally {
+			inProgress = false;
+		}
 	}
 
 	public function getAllObjects (type:Class = null) : Array {
-		if (!type) return data.concat();
+		if (inProgress) return [];
+		type ||= Object;
+		inProgress = true;
 		var results:Array = [];
-		for each (var value:Object in data) {
-			if (value is type) results.push(value);
+		try {
+			for each (var value:Object in data) {
+				if (value is type) {
+					results.push(value);
+				}
+				else if (value is CommandData) {
+					results = results.concat(CommandData(value).getAllObjects(type));
+				}
+			}
+			return results;
+		} 
+		finally {
+			inProgress = false;
 		}
-		return results;
 	}
 	
 	

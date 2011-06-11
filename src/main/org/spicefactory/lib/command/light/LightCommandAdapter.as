@@ -44,7 +44,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	private var cancelMethod:Method;
 	
 	private var _lifecycle:CommandLifecycle;
-	private var _data:CommandData; // TODO - obtain data from parent
+	private var _data:DefaultCommandData;
 	
 	
 	private static const errorTypes:Array = [Error, ErrorEvent];
@@ -76,6 +76,33 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	public function get suspendable () : Boolean {
 		return false;
 	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function prepare (lifecycle:CommandLifecycle, data:CommandData) : void {
+		_lifecycle = lifecycle;
+		_data = new DefaultCommandData(data);	
+	}
+	
+	protected function get lifecycle () : CommandLifecycle {
+		if (!_lifecycle) {
+			_lifecycle = new DefaultCommandLifecycle();
+		}
+		return _lifecycle;
+	}
+    
+    /**
+     * The data associated with this executor.
+     * Contains any results from previously executed commands or
+     * data specified upfront.
+     */
+    protected function get data () : CommandData {
+    	if (!_data) {
+    		_data = new DefaultCommandData();
+    	}
+    	return _data;
+    }
 	
 	protected override function doExecute () : void {
 		_lifecycle.beforeExecution(target, new DefaultCommandData());
@@ -153,20 +180,6 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		cancelMethod.invoke(target, []);
 		_lifecycle.afterCompletion(target);
 	}
-
-	/**
-	 * @inheritDoc
-	 */	
-	public function get lifecycle () : CommandLifecycle {
-		if (!_lifecycle) {
-			_lifecycle = new DefaultCommandLifecycle();
-		}
-		return _lifecycle;
-	}
-    
-    public function set lifecycle (value:CommandLifecycle) : void {
-    	_lifecycle = value;
-    }
 
 	
 }

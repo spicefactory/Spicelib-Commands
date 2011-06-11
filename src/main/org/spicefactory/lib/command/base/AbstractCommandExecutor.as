@@ -44,7 +44,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	private var activeCommands:List = new List();
 	
-	private var _data:DefaultCommandData = new DefaultCommandData(); // TODO - handle parent/child hierarchies for data
+	private var _data:DefaultCommandData = new DefaultCommandData();
 	
 	private var _lifecycle:CommandLifecycle;
 	
@@ -84,17 +84,18 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	/**
 	 * @inheritDoc
-	 */	
-	public function get lifecycle () : CommandLifecycle {
+	 */
+	public function prepare (lifecycle:CommandLifecycle, data:CommandData) : void {
+		_lifecycle = lifecycle;
+		_data = new DefaultCommandData(data);	
+	}
+	
+	protected function get lifecycle () : CommandLifecycle {
 		if (!_lifecycle) {
 			_lifecycle = new DefaultCommandLifecycle();
 		}
 		return _lifecycle;
 	}
-    
-    public function set lifecycle (value:CommandLifecycle) : void {
-    	_lifecycle = value;
-    }
     
     /**
      * The data associated with this executor.
@@ -102,9 +103,12 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
      * data specified upfront.
      */
     protected function get data () : CommandData {
+    	if (!_data) {
+    		_data = new DefaultCommandData();
+    	}
     	return _data;
     }
-	
+    
 	/**
 	 * Executes the specified command.
 	 * 
@@ -122,7 +126,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		}
 		
 		if (com is CommandExecutor) {
-			CommandExecutor(com).lifecycle = lifecycle;
+			CommandExecutor(com).prepare(lifecycle, data);
 		}
 		
 		try {
