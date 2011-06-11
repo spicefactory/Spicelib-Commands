@@ -15,7 +15,6 @@
  */
 
 package org.spicefactory.lib.command.flow {
-import org.spicefactory.lib.command.CommandLinkProcessor;
 	
 /**
  * @author Jens Halm

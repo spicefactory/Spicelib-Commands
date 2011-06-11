@@ -16,7 +16,7 @@
  
 package org.spicefactory.lib.command.builder {
 
-import org.spicefactory.lib.command.CommandProxy;
+import org.spicefactory.lib.command.proxy.CommandProxy;
 	
 /**
  * @author Jens Halm

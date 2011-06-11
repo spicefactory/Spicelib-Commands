@@ -17,10 +17,10 @@
 package org.spicefactory.lib.command.builder {
 
 import org.spicefactory.lib.command.data.CommandData;
-import org.spicefactory.lib.command.CommandGroup;
-import org.spicefactory.lib.command.CommandProxy;
+import org.spicefactory.lib.command.group.CommandGroup;
 import org.spicefactory.lib.command.group.CommandSequence;
 import org.spicefactory.lib.command.group.ParallelCommands;
+import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.logging.LogUtil;
 	
 /**

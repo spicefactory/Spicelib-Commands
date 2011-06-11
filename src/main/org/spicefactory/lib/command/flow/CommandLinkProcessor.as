@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.spicefactory.lib.command {
-
+ 
+package org.spicefactory.lib.command.flow {
+import org.spicefactory.lib.command.Command;
 	
 /**
  * @author Jens Halm
  */
-public interface CommandProxy extends CommandExecutor {
+public interface CommandLinkProcessor {
 	
 	
-	function get target () : Command;
+	function execute (command:Command) : void;
+	
+	function complete () : void;
+	
+	function cancel () : void;
+	
+	function error (cause:Object) : void;
 	
 	
 }

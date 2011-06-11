@@ -17,8 +17,6 @@
 package org.spicefactory.lib.command.flow {
 
 import org.spicefactory.lib.command.CommandResult;
-import org.spicefactory.lib.command.CommandLinkProcessor;
-import org.spicefactory.lib.command.CommandLink;
 	
 /**
  * @author Jens Halm

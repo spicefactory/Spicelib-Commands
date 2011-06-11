@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-package org.spicefactory.lib.command {
+
+package org.spicefactory.lib.command.flow {
+import org.spicefactory.lib.command.CommandResult;
 	
 /**
+ * 
+ * 
  * @author Jens Halm
  */
-public interface CommandLinkProcessor {
+public interface CommandLink {
 	
-	
-	function execute (command:Command) : void;
-	
-	function complete () : void;
-	
-	function cancel () : void;
-	
-	function error (cause:Object) : void;
+
+	function link (result:CommandResult, processor:CommandLinkProcessor) : void;
 	
 	
 }

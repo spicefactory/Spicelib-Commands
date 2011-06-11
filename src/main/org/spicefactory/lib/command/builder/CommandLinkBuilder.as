@@ -16,8 +16,8 @@
 
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.command.flow.CommandLink;
 import org.spicefactory.lib.command.flow.LinkCondition;
-import org.spicefactory.lib.command.CommandLink;
 	
 /**
  * @author Jens Halm
@@ -75,9 +75,9 @@ public class CommandLinkBuilder {
 }
 }
 
-import org.spicefactory.lib.command.CommandLink;
-import org.spicefactory.lib.command.CommandLinkProcessor;
 import org.spicefactory.lib.command.CommandResult;
+import org.spicefactory.lib.command.flow.CommandLink;
+import org.spicefactory.lib.command.flow.CommandLinkProcessor;
 import org.spicefactory.lib.command.flow.LinkCondition;
 
 class LinkFunction implements CommandLink {

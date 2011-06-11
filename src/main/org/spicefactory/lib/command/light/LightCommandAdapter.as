@@ -16,7 +16,8 @@
 
 package org.spicefactory.lib.command.light {
 
-import org.spicefactory.lib.command.CommandAdapter;
+import flash.events.ErrorEvent;
+import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.base.AbstractSuspendableCommand;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.data.DefaultCommandData;
@@ -29,7 +30,6 @@ import org.spicefactory.lib.reflect.Method;
 import org.spicefactory.lib.reflect.Parameter;
 import org.spicefactory.lib.reflect.types.Void;
 
-import flash.events.ErrorEvent;
 	
 /**
  * @author Jens Halm

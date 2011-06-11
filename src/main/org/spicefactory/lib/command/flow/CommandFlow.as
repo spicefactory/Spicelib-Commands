@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package org.spicefactory.lib.command {
+package org.spicefactory.lib.command.flow {
+import org.spicefactory.lib.command.Command;
+import org.spicefactory.lib.command.CommandExecutor;
 	
 /**
  * 
  * 
  * @author Jens Halm
  */
-public interface CommandGroup extends CommandExecutor {
+public interface CommandFlow extends CommandExecutor {
 	
-	function addCommand (command:Command) : void;
-    
+	function addLink (command:Command, link:CommandLink) : void;
+
+	function setDefaultLink (link:CommandLink) : void;
+
 }
 }

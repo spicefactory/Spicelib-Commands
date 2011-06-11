@@ -16,7 +16,6 @@
 
 package org.spicefactory.lib.command.adapter {
 
-import org.spicefactory.lib.command.CommandAdapter;
 import org.spicefactory.lib.errors.IllegalStateError;
 	
 /**

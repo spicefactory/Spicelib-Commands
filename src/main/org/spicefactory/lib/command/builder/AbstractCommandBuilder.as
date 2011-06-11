@@ -16,13 +16,14 @@
 
 package org.spicefactory.lib.command.builder {
 
-import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
 import org.spicefactory.lib.command.Command;
-import org.spicefactory.lib.command.CommandProxy;
 import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.data.DefaultCommandData;
 import org.spicefactory.lib.command.events.CommandEvent;
 import org.spicefactory.lib.command.events.CommandResultEvent;
+import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
+import org.spicefactory.lib.command.proxy.CommandProxy;
+import org.spicefactory.lib.command.proxy.DefaultCommandProxy;
 	
 /**
  * @author Jens Halm

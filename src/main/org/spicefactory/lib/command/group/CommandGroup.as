@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package org.spicefactory.lib.command {
+package org.spicefactory.lib.command.group {
+import org.spicefactory.lib.command.Command;
+import org.spicefactory.lib.command.CommandExecutor;
 	
 /**
  * 
  * 
  * @author Jens Halm
  */
-public interface CommandAdapter extends CommandExecutor {
+public interface CommandGroup extends CommandExecutor {
 	
-	function get target () : Object;
-	
+	function addCommand (command:Command) : void;
+    
 }
 }

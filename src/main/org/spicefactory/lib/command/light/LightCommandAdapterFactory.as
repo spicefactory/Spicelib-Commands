@@ -16,7 +16,7 @@
 
 package org.spicefactory.lib.command.light {
 
-import org.spicefactory.lib.command.CommandAdapter;
+import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.adapter.CommandAdapterFactory;
 import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.logging.LogContext;

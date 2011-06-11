@@ -16,7 +16,7 @@
 
 package org.spicefactory.lib.command.builder {
 
-import org.spicefactory.lib.command.CommandLink;
+import org.spicefactory.lib.command.flow.CommandLink;
 import org.spicefactory.lib.command.flow.DefaultCommandLink;
 import org.spicefactory.lib.command.flow.LinkAction;
 import org.spicefactory.lib.command.flow.LinkCondition;
@@ -73,10 +73,10 @@ public class LinkTargetBuilder {
 }
 }
 
-import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.command.Command;
-import org.spicefactory.lib.command.CommandLinkProcessor;
+import org.spicefactory.lib.command.flow.CommandLinkProcessor;
 import org.spicefactory.lib.command.flow.LinkAction;
+import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.util.collection.Map;
 
 interface ResolvableAction extends LinkAction {

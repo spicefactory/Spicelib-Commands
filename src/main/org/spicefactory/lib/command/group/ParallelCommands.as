@@ -16,7 +16,6 @@
 package org.spicefactory.lib.command.group {
 
 import org.spicefactory.lib.command.Command;
-import org.spicefactory.lib.command.CommandGroup;
 import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
 	

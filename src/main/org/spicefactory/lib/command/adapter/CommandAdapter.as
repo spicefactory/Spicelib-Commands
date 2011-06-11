@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package org.spicefactory.lib.command {
+package org.spicefactory.lib.command.adapter {
+import org.spicefactory.lib.command.CommandExecutor;
 	
 /**
  * 
  * 
  * @author Jens Halm
  */
-public interface CommandLink {
+public interface CommandAdapter extends CommandExecutor {
 	
-
-	function link (result:CommandResult, processor:CommandLinkProcessor) : void;
-	
+	function get target () : Object;
 	
 }
 }

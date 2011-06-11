@@ -16,8 +16,6 @@
 package org.spicefactory.lib.command.flow {
 
 import org.spicefactory.lib.command.Command;
-import org.spicefactory.lib.command.CommandFlow;
-import org.spicefactory.lib.command.CommandLink;
 import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
 import org.spicefactory.lib.command.group.CommandSequence;
@@ -114,9 +112,9 @@ public class DefaultCommandFlow extends AbstractCommandExecutor implements Comma
 }
 
 
-import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.command.Command;
-import org.spicefactory.lib.command.CommandLinkProcessor;
+import org.spicefactory.lib.command.flow.CommandLinkProcessor;
+import org.spicefactory.lib.errors.IllegalStateError;
 
 class Processor implements CommandLinkProcessor {
 

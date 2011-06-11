@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.spicefactory.lib.command.builder {
+package org.spicefactory.lib.command.proxy {
 
-import org.spicefactory.lib.command.adapter.CommandAdapters;
+import flash.events.TimerEvent;
+import flash.utils.Timer;
 import org.spicefactory.lib.command.Command;
-import org.spicefactory.lib.command.CommandProxy;
+import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.base.AbstractCancellableCommand;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
 import org.spicefactory.lib.command.events.CommandEvent;
@@ -28,8 +29,6 @@ import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.logging.LogContext;
 import org.spicefactory.lib.logging.Logger;
 
-import flash.events.TimerEvent;
-import flash.utils.Timer;
 
 	
 /**

@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package org.spicefactory.lib.command {
+package org.spicefactory.lib.command.proxy {
+import org.spicefactory.lib.command.Command;
+import org.spicefactory.lib.command.CommandExecutor;
+
 	
 /**
- * 
- * 
  * @author Jens Halm
  */
-public interface CommandFlow extends CommandExecutor {
+public interface CommandProxy extends CommandExecutor {
 	
-	function addLink (command:Command, link:CommandLink) : void;
-
-	function setDefaultLink (link:CommandLink) : void;
-
+	
+	function get target () : Command;
+	
+	
 }
 }
