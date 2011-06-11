@@ -43,6 +43,11 @@ public class CommandProxyBuilder extends AbstractCommandBuilder {
 		return this;
 	}
 	
+	public function data (value:Object) : CommandProxyBuilder {
+		addData(value);
+		return this;
+	}
+	
 	public function result (callback:Function) : CommandProxyBuilder {
 		addResultCallback(callback);
 		return this;

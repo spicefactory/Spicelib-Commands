@@ -16,9 +16,11 @@
 
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandProxy;
 import org.spicefactory.lib.command.adapter.CommandAdapters;
+import org.spicefactory.lib.command.data.DefaultCommandData;
 import org.spicefactory.lib.command.events.CommandEvent;
 import org.spicefactory.lib.command.events.CommandResultEvent;
 	
@@ -29,6 +31,7 @@ public class AbstractCommandBuilder implements CommandBuilder {
 
 
 	private var proxy:DefaultCommandProxy;
+	private var _data:DefaultCommandData = new DefaultCommandData();
 
 
 	protected function setTarget (target:Command) : void {
@@ -37,6 +40,10 @@ public class AbstractCommandBuilder implements CommandBuilder {
 	
 	protected function setType (type:Class) : void {
 		proxy.type = type;
+	}
+	
+	protected function addData (value:Object) : void {
+		_data.addValue(value);
 	}
 	
 	protected function setTimeout (milliseconds:uint) : void {
@@ -83,6 +90,7 @@ public class AbstractCommandBuilder implements CommandBuilder {
 	
 	public function execute () : CommandProxy {
 		var proxy:CommandProxy = build();
+		proxy.prepare(new DefaultCommandLifecycle(), _data);
 		proxy.execute();
 		return proxy;
 	}

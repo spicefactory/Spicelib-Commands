@@ -57,6 +57,12 @@ public class CommandFlowBuilder extends AbstractCommandBuilder {
 		return this;
 	}
 	
+	public function data (value:Object) : CommandFlowBuilder {
+		addData(value);
+		return this;
+	}
+	
+	
 	public function lastResult (callback:Function) : CommandFlowBuilder {
 		var f:Function = function (data:CommandData) : void {
 			callback(data.getObject());

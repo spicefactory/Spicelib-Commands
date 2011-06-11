@@ -62,6 +62,12 @@ public class CommandGroupBuilder extends AbstractCommandBuilder {
 		return this;
 	}
 	
+	public function data (value:Object) : CommandGroupBuilder {
+		addData(value);
+		return this;
+	}
+	
+	
 	public function lastResult (callback:Function) : CommandGroupBuilder {
 		var f:Function = function (data:CommandData) : void {
 			callback(data.getObject());
