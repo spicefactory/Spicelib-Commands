@@ -17,6 +17,8 @@
 package org.spicefactory.lib.command.builder {
 
 import org.spicefactory.lib.logging.LogUtil;
+
+import flash.system.ApplicationDomain;
 	
 /**
  * @author Jens Halm
@@ -31,6 +33,11 @@ public class CommandProxyBuilder extends AbstractCommandBuilder {
 		else {
 			setTarget(asCommand(target));
 		}
+	}
+	
+	public function domain (domain:ApplicationDomain) : CommandProxyBuilder {
+		setDomain(domain);
+		return this;
 	}
 	
 	public function description (description:String, ...params) : CommandProxyBuilder {

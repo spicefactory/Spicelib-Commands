@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.reflect.ClassInfo;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.data.DefaultCommandData;
@@ -24,6 +25,8 @@ import org.spicefactory.lib.command.events.CommandResultEvent;
 import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
 import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.command.proxy.DefaultCommandProxy;
+
+import flash.system.ApplicationDomain;
 	
 /**
  * @author Jens Halm
@@ -33,6 +36,7 @@ public class AbstractCommandBuilder implements CommandBuilder {
 
 	private var proxy:DefaultCommandProxy;
 	private var _data:DefaultCommandData = new DefaultCommandData();
+	private var _domain:ApplicationDomain;
 
 
 	protected function setTarget (target:Command) : void {
@@ -41,6 +45,10 @@ public class AbstractCommandBuilder implements CommandBuilder {
 	
 	protected function setType (type:Class) : void {
 		proxy.type = type;
+	}
+	
+	protected function setDomain (domain:ApplicationDomain) : void {
+		_domain = domain;;
 	}
 	
 	protected function addData (value:Object) : void {
@@ -73,6 +81,10 @@ public class AbstractCommandBuilder implements CommandBuilder {
 		});
 	}
 	
+	private function get domain () : ApplicationDomain {
+		return _domain || Commands.defaultDomain || ClassInfo.currentDomain;
+	}
+	
 	protected function asCommand (command:Object) : Command {
 		if (command is Command) {
 			return command as Command;
@@ -84,14 +96,13 @@ public class AbstractCommandBuilder implements CommandBuilder {
 			return Commands.create(command as Class).build();
 		}
 		else {
-			return CommandAdapters.createAdapter(command);
+			return CommandAdapters.createAdapter(command, domain);
 		}
-		// TODO - handle ApplicationDomains
 	}
 	
 	public function execute () : CommandProxy {
 		var proxy:CommandProxy = build();
-		proxy.prepare(new DefaultCommandLifecycle(), _data);
+		proxy.prepare(new DefaultCommandLifecycle(domain), _data);
 		proxy.execute();
 		return proxy;
 	}

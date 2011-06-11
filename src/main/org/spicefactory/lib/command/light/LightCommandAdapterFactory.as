@@ -16,7 +16,6 @@
 
 package org.spicefactory.lib.command.light {
 
-import org.spicefactory.lib.reflect.Property;
 import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.adapter.CommandAdapterFactory;
 import org.spicefactory.lib.errors.IllegalStateError;
@@ -25,7 +24,10 @@ import org.spicefactory.lib.logging.Logger;
 import org.spicefactory.lib.reflect.ClassInfo;
 import org.spicefactory.lib.reflect.Method;
 import org.spicefactory.lib.reflect.Parameter;
+import org.spicefactory.lib.reflect.Property;
 import org.spicefactory.lib.reflect.types.Void;
+
+import flash.system.ApplicationDomain;
 
 /**
  * @author Jens Halm
@@ -36,8 +38,8 @@ public class LightCommandAdapterFactory implements CommandAdapterFactory {
 	private static const log:Logger = LogContext.getLogger(LightCommandAdapterFactory);
 
 
-	public function createAdapter (instance:Object) : CommandAdapter {
-		var info:ClassInfo = ClassInfo.forInstance(instance); // TODO - handle ApplicationDomains
+	public function createAdapter (instance:Object, domain:ApplicationDomain = null) : CommandAdapter {
+		var info:ClassInfo = ClassInfo.forInstance(instance, domain);
 		var execute:Method = info.getMethod("execute");
 		if (!execute) return null;
 		var async:Boolean;

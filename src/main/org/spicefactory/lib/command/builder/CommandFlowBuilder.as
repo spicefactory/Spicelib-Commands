@@ -24,6 +24,8 @@ import org.spicefactory.lib.command.flow.DefaultCommandFlow;
 import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.logging.LogUtil;
 import org.spicefactory.lib.util.collection.Map;
+
+import flash.system.ApplicationDomain;
 	
 /**
  * @author Jens Halm
@@ -45,6 +47,11 @@ public class CommandFlowBuilder extends AbstractCommandBuilder {
 		var link:CommandLinkBuilder = new CommandLinkBuilder(commandType);
 		links.push(link);
 		return link;
+	}
+	
+	public function domain (domain:ApplicationDomain) : CommandFlowBuilder {
+		setDomain(domain);
+		return this;
 	}
 	
 	public function description (description:String, ...params) : CommandFlowBuilder {

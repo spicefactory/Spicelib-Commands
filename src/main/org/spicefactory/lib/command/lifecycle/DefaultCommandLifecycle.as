@@ -21,6 +21,8 @@ import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.reflect.ClassInfo;
 import org.spicefactory.lib.reflect.Parameter;
 
+import flash.system.ApplicationDomain;
+
 	
 /**
  * @author Jens Halm
@@ -28,8 +30,16 @@ import org.spicefactory.lib.reflect.Parameter;
 public class DefaultCommandLifecycle implements CommandLifecycle {
 
 
+	private var domain:ApplicationDomain;
+
+
+	function DefaultCommandLifecycle (domain:ApplicationDomain = null) {
+		this.domain = domain;
+	}
+
+
 	public function createInstance (type:Class, data:CommandData) : Object {
-		var info:ClassInfo = ClassInfo.forClass(type); // TODO - handle ApplicationDomains
+		var info:ClassInfo = ClassInfo.forClass(type, domain);
 		var params:Array = [];
 		for each (var param:Parameter in info.getConstructor().parameters) {
 			var value:Object = data.getObject(param.type.getClass());

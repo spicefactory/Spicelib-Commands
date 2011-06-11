@@ -22,6 +22,8 @@ import org.spicefactory.lib.command.group.CommandSequence;
 import org.spicefactory.lib.command.group.ParallelCommands;
 import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.logging.LogUtil;
+
+import flash.system.ApplicationDomain;
 	
 /**
  * @author Jens Halm
@@ -49,6 +51,11 @@ public class CommandGroupBuilder extends AbstractCommandBuilder {
 	
 	public function create (commandType:Class) : CommandGroupBuilder {
 		add(commandType);
+		return this;
+	}
+	
+	public function domain (domain:ApplicationDomain) : CommandGroupBuilder {
+		setDomain(domain);
 		return this;
 	}
 	

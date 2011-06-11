@@ -18,12 +18,22 @@ package org.spicefactory.lib.command.builder {
 
 import org.spicefactory.lib.command.util.DelayCommand;
 import org.spicefactory.lib.command.util.DelegateCommand;
+
+import flash.system.ApplicationDomain;
 	
 /**
  * @author Jens Halm
  */
 public class Commands {
 	
+	/**
+	 * @private
+	 */
+	internal static var defaultDomain:ApplicationDomain;
+	
+	public static function useDomain (domain:ApplicationDomain) : void {
+		defaultDomain = domain;
+	}
 	
 	public static function wrap (command:Object) : CommandProxyBuilder {
 		return new CommandProxyBuilder(command);

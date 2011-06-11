@@ -16,6 +16,8 @@
 
 package org.spicefactory.lib.command.adapter {
 
+import flash.system.ApplicationDomain;
+
 	
 /**
  * @author Jens Halm
@@ -23,8 +25,8 @@ package org.spicefactory.lib.command.adapter {
 public interface CommandAdapterFactory {
 	
 	
-	function createAdapter (instance:Object) : CommandAdapter;
-	
+	function createAdapter (instance:Object, domain:ApplicationDomain = null) : CommandAdapter;
+
 	
 }
 }

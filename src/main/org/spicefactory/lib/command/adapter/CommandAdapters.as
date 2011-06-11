@@ -16,6 +16,8 @@
 
 package org.spicefactory.lib.command.adapter {
 
+import flash.system.ApplicationDomain;
+
 import org.spicefactory.lib.errors.IllegalStateError;
 	
 /**
@@ -33,17 +35,17 @@ public class CommandAdapters {
 	}
 	
 	
-	public static function createAdapter (instance:Object) : CommandAdapter {
+	public static function createAdapter (instance:Object, domain:ApplicationDomain = null) : CommandAdapter {
 		var adapter:CommandAdapter;
 		for each (var reg:FactoryRegistration in factories) {
-			adapter = reg.factory.createAdapter(instance);
+			adapter = reg.factory.createAdapter(instance, domain);
 			if (adapter) {
 				return adapter;
 			}
 		}
 		throw new IllegalStateError("No command adapter factory registered for instance " + instance);
 	}
-	
+
 	
 }
 }
