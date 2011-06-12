@@ -24,7 +24,7 @@
 	</target>
 	
 	<target name="compile">
-		<exec executable="${flex4.sdk}/bin/${compc}" dir="${basedir}">
+		<exec executable="${flex3.sdk}/bin/${compc}" dir="${basedir}">
 					
 			<arg line="-load-config=metadata.xml" />
 			<arg line="-load-config+=config.xml" />

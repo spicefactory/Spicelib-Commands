@@ -139,7 +139,7 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 	/**
 	 * @private
 	 */
-	public function toString () : String {
+	public override function toString () : String {
 		return (proxyDescription)
 				? proxyDescription
 				: (_target) 

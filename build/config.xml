@@ -10,6 +10,7 @@
 		<external-library-path>
 			<path-element>${flexlib}/libs/player/9/playerglobal.swc</path-element>
 			<path-element>${project}/libs/spicelib-util-3.0.0-SNAPSHOT.swc</path-element>
+			<path-element>${project}/libs/spicelib-reflect-3.0.0-SNAPSHOT.swc</path-element>
 		</external-library-path>
 		
 		<warn-no-constructor>false</warn-no-constructor>

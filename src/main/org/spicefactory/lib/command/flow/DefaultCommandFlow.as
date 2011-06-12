@@ -105,6 +105,7 @@ public class DefaultCommandFlow extends AbstractCommandExecutor implements Comma
 			error(e);
 			return true;
 		}
+		return false;
 	}
 		
 	

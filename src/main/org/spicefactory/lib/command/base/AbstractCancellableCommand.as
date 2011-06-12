@@ -35,7 +35,6 @@ public class AbstractCancellableCommand extends AbstractAsyncCommand implements 
 	 * Creates a new instance.
 	 * 
 	 * @param description a description of this command for logging purposes
-	 * @param timeout the timeout for this Task in milliseconds or 0 for disabling the timeout
 	 */
 	public function AbstractCancellableCommand (description:String = null) {
 		super(description);

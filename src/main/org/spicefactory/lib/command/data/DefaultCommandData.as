@@ -57,6 +57,7 @@ public class DefaultCommandData implements CommandData {
 		finally {
 			inProgress = false;
 		}
+		return null;
 	}
 
 	public function getAllObjects (type:Class = null) : Array {
@@ -73,11 +74,11 @@ public class DefaultCommandData implements CommandData {
 					results = results.concat(CommandData(value).getAllObjects(type));
 				}
 			}
-			return results;
 		} 
 		finally {
 			inProgress = false;
 		}
+		return results;
 	}
 	
 	

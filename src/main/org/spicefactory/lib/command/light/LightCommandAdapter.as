@@ -151,6 +151,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 				params.push(undefined);
 			}
 		}
+		return params;
 	}
 	
 	private function callback (result:* = undefined) : void {

@@ -31,7 +31,17 @@ public class AbstractSuspendableCommand extends AbstractCancellableCommand imple
 	
 	
 	private var _suspended : Boolean;
+
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param description a description of this command for logging purposes
+	 */
+	public function AbstractSuspendableCommand (description:String = null) {
+		super(description);
+	}
+		
 	
 	/**
 	 * @inheritDoc
