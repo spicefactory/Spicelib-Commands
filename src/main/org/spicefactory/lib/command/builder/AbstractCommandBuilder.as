@@ -16,7 +16,6 @@
 
 package org.spicefactory.lib.command.builder {
 
-import org.spicefactory.lib.reflect.ClassInfo;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.data.DefaultCommandData;
@@ -25,6 +24,7 @@ import org.spicefactory.lib.command.events.CommandResultEvent;
 import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
 import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.command.proxy.DefaultCommandProxy;
+import org.spicefactory.lib.reflect.ClassInfo;
 
 import flash.system.ApplicationDomain;
 	
@@ -37,6 +37,11 @@ public class AbstractCommandBuilder implements CommandBuilder {
 	private var proxy:DefaultCommandProxy;
 	private var _data:DefaultCommandData = new DefaultCommandData();
 	private var _domain:ApplicationDomain;
+
+
+	function AbstractCommandBuilder (proxy:DefaultCommandProxy = null) {
+		this.proxy = proxy || new DefaultCommandProxy();
+	}
 
 
 	protected function setTarget (target:Command) : void {

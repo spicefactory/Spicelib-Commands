@@ -16,6 +16,8 @@
  
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.command.proxy.CommandProxy;
+import org.spicefactory.lib.command.proxy.DefaultCommandProxy;
 import org.spicefactory.lib.logging.LogUtil;
 
 import flash.system.ApplicationDomain;
@@ -26,13 +28,14 @@ import flash.system.ApplicationDomain;
 public class CommandProxyBuilder extends AbstractCommandBuilder {
 	
 	
-	function CommandProxyBuilder (target:Object) {
-		if (target is Class) {
-			setType(target as Class);
-		}
-		else {
-			setTarget(asCommand(target));
-		}
+	private var target:Object;
+	
+	/**
+	 * @private
+	 */
+	function CommandProxyBuilder (target:Object, proxy:DefaultCommandProxy = null) {
+		super(proxy);
+		this.target = target;
 	}
 	
 	public function domain (domain:ApplicationDomain) : CommandProxyBuilder {
@@ -68,6 +71,16 @@ public class CommandProxyBuilder extends AbstractCommandBuilder {
 	public function cancel (callback:Function) : CommandProxyBuilder {
 		addCancelCallback(callback);
 		return this;
+	}
+	
+	public override function build () : CommandProxy {
+		if (target is Class) {
+			setType(target as Class);
+		}
+		else {
+			setTarget(asCommand(target));
+		}
+		return super.build();
 	}
 	
 	
