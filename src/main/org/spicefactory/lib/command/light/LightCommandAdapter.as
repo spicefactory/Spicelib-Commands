@@ -108,7 +108,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
     }
 	
 	protected override function doExecute () : void {
-		_lifecycle.beforeExecution(target, new DefaultCommandData());
+		_lifecycle.beforeExecution(target, data);
 		if (callbackProperty) {
 			callbackProperty.setValue(target, callback);
 		}
@@ -147,7 +147,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 				params.push(value);
 			}
 			else if (param.required) {
-				throw new IllegalStateError("No data available for required constructor parameter of type " 
+				throw new IllegalStateError("No data available for required parameter of type " 
 						+ param.type.name);
 			}
 			else {
