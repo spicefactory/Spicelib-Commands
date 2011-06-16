@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.command.flow.LinkConditions;
 import org.spicefactory.lib.command.flow.CommandLink;
 import org.spicefactory.lib.command.flow.LinkCondition;
 	
@@ -48,19 +49,19 @@ public class CommandLinkBuilder {
 	}
 	
 	public function linkResultType (type:Class) : LinkTargetBuilder {
-		return newTargetBuilder(new ResultTypeCondition(type));
+		return newTargetBuilder(LinkConditions.forResultType(type));
 	}
 	
 	public function linkResultValue (value:Object) : LinkTargetBuilder {
-		return newTargetBuilder(new ResultValueCondition(value));
+		return newTargetBuilder(LinkConditions.forResultValue(value));
 	}
 	
 	public function linkResultProperty (name:String, value:Object) : LinkTargetBuilder {
-		return newTargetBuilder(new ResultPropertyCondition(name, value));
+		return newTargetBuilder(LinkConditions.forResultProperty(name, value));
 	}
 	
 	public function linkDefault () : LinkTargetBuilder {
-		return newTargetBuilder(new DefaultCondition());
+		return newTargetBuilder(LinkConditions.forDefault());
 	}
 	
 	public function linkFunction (link:Function) : void {
@@ -78,7 +79,6 @@ public class CommandLinkBuilder {
 import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.flow.CommandLink;
 import org.spicefactory.lib.command.flow.CommandLinkProcessor;
-import org.spicefactory.lib.command.flow.LinkCondition;
 
 class LinkFunction implements CommandLink {
 
@@ -95,56 +95,3 @@ class LinkFunction implements CommandLink {
 	
 }
 
-class DefaultCondition implements LinkCondition {
-
-	public function matches (result:CommandResult) : Boolean {
-		return true;
-	}
-	
-}
-
-class ResultTypeCondition implements LinkCondition {
-
-	private var type:Class;
-	
-	function ResultTypeCondition (type:Class) {
-		this.type = type;
-	}
-	
-	public function matches (result:CommandResult) : Boolean {
-		return result.complete && (result.value is type);
-	}
-	
-}
-
-class ResultValueCondition implements LinkCondition {
-
-	private var value:*;
-	
-	function ResultValueCondition (value:*) {
-		this.value = value;
-	}
-	
-	public function matches (result:CommandResult) : Boolean {
-		return result.complete && (result.value === value);
-	}
-	
-}
-
-class ResultPropertyCondition implements LinkCondition {
-
-	private var name:String;
-	private var value:*;
-	
-	function ResultPropertyCondition (name:String, value:*) {
-		this.name = name;
-		this.value = value;
-	}
-	
-	public function matches (result:CommandResult) : Boolean {
-		return result.complete 
-			&& (result.value.hasOwnProperty(name) 
-			&& result.value[name] === value);
-	}
-	
-}
