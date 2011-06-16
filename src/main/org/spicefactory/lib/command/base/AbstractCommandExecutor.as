@@ -15,6 +15,7 @@
  */
 package org.spicefactory.lib.command.base {
 
+import org.spicefactory.lib.collection.List;
 import org.spicefactory.lib.command.*;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.data.DefaultCommandData;
@@ -27,7 +28,6 @@ import org.spicefactory.lib.command.util.CommandUtil;
 import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.logging.LogContext;
 import org.spicefactory.lib.logging.Logger;
-import org.spicefactory.lib.util.collection.List;
 
 /**
  * Abstract base class for CommandGroup implementations.

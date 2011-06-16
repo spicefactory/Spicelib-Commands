@@ -15,6 +15,8 @@
  */
 package org.spicefactory.lib.command.flow {
 
+import org.spicefactory.lib.collection.List;
+import org.spicefactory.lib.collection.MultiMap;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
@@ -22,8 +24,6 @@ import org.spicefactory.lib.command.group.CommandSequence;
 import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.logging.LogContext;
 import org.spicefactory.lib.logging.Logger;
-import org.spicefactory.lib.util.collection.List;
-import org.spicefactory.lib.util.collection.MultiMap;
 
 /**
  * @author Jens Halm

@@ -16,6 +16,7 @@
  
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.collection.Map;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.flow.CommandFlow;
@@ -23,7 +24,6 @@ import org.spicefactory.lib.command.flow.CommandLink;
 import org.spicefactory.lib.command.flow.DefaultCommandFlow;
 import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.logging.LogUtil;
-import org.spicefactory.lib.util.collection.Map;
 
 import flash.system.ApplicationDomain;
 	
