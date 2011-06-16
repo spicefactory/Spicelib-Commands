@@ -16,8 +16,10 @@
 
 package org.spicefactory.lib.command.light {
 
+import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.base.AbstractSuspendableCommand;
+import org.spicefactory.lib.command.base.DefaultCommandResult;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.data.DefaultCommandData;
 import org.spicefactory.lib.command.events.CommandEvent;
@@ -116,20 +118,21 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 				executeMethod.invoke(target, params);
 			}
 			else {
+				var result:Object;
 				if (executeMethod.returnType.getClass() != Void) {
-					var result:Object = executeMethod.invoke(target, params);
+					result = executeMethod.invoke(target, params);
 					complete(result);
 				}
 				else {
 					executeMethod.invoke(target, params);
 					complete();
 				}
-				_lifecycle.afterCompletion(target);
+				_lifecycle.afterCompletion(target, DefaultCommandResult.forCompletion(target, result));
 			}
 		}
 		catch (e:Error) {
 			error(e);
-			_lifecycle.afterCompletion(target);
+			_lifecycle.afterCompletion(target, DefaultCommandResult.forError(target, e));
 		}
 	}
 	
@@ -158,17 +161,21 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		if (!active) {
 			throw new IllegalStateError("Callback invoked although command " + target + " is not active");
 		}
+		var cr:CommandResult;
 		if (result === undefined) {
 			// do not call cancel to bypass doCancel
+			cr = DefaultCommandResult.forCancellation(target);
 			dispatchEvent(new CommandEvent(CommandEvent.CANCEL));	
 		}
 		else if (isError(result)) {
+			cr = DefaultCommandResult.forError(target, result);
 			error(result);
 		}
 		else {
+			cr = DefaultCommandResult.forCompletion(target, result);
 			complete(result);
 		}
-		_lifecycle.afterCompletion(target);
+		_lifecycle.afterCompletion(target, cr);
  	}
  	
  	private function isError (result:Object) : Boolean {
@@ -183,7 +190,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	 */
 	protected override function doCancel () : void {
 		cancelMethod.invoke(target, []);
-		_lifecycle.afterCompletion(target);
+		_lifecycle.afterCompletion(target, DefaultCommandResult.forCancellation(this));
 	}
 
 	

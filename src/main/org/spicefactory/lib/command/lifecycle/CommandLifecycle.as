@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.lifecycle {
 
+import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.data.CommandData;
 	
 /**
@@ -28,7 +29,7 @@ public interface CommandLifecycle {
 	
 	function beforeExecution (command:Object, data:CommandData) : void;
 	
-	function afterCompletion (command:Object) : void;
+	function afterCompletion (command:Object, result:CommandResult) : void;
 	
 	
 }

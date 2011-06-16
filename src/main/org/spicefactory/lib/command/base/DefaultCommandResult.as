@@ -16,7 +16,6 @@
  
 package org.spicefactory.lib.command.base {
 
-import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandResult;
 	
 /**
@@ -25,39 +24,39 @@ import org.spicefactory.lib.command.CommandResult;
 public class DefaultCommandResult implements CommandResult {
 
 
-	private var _command:Command;
+	private var _command:Object;
 	private var _value:Object;
-	private var _success:Boolean;
+	private var _complete:Boolean;
 
 
-	function DefaultCommandResult (command:Command, value:Object = null, success:Boolean = true) {
+	function DefaultCommandResult (command:Object, value:Object = null, complete:Boolean = true) {
 		_command = command;
 		_value = value;
-		_success = success;
+		_complete = complete;
 	}
 	
-	public static function forCompletion (command:Command, result:Object) : CommandResult {
+	public static function forCompletion (command:Object, result:Object) : CommandResult {
 		return new DefaultCommandResult(command, result);
 	}
 	
-	public static function forError (command:Command, cause:Object) : CommandResult {
+	public static function forError (command:Object, cause:Object) : CommandResult {
 		return new DefaultCommandResult(command, cause, false);
 	}
 	
-	public static function forCancellation (command:Command) : CommandResult {
+	public static function forCancellation (command:Object) : CommandResult {
 		return new DefaultCommandResult(command, null, false);
 	}
 
-	public function get command () : Command {
-		return null;
+	public function get command () : Object {
+		return _command;
 	}
 
 	public function get value () : Object {
-		return null;
+		return _value;
 	}
 
 	public function get complete () : Boolean {
-		return false;
+		return _complete;
 	}
 	
 	/**

@@ -22,7 +22,7 @@ package org.spicefactory.lib.command {
 public interface CommandResult {
 	
 	
-	function get command () : Command;
+	function get command () : Object;
 	
 	function get value () : Object;
 	

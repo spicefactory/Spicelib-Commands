@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.lifecycle {
 
+import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.reflect.ClassInfo;
@@ -61,7 +62,7 @@ public class DefaultCommandLifecycle implements CommandLifecycle {
 		/* default implementation does nothing */
 	}
 
-	public function afterCompletion (command:Object) : void {
+	public function afterCompletion (command:Object, result:CommandResult) : void {
 		/* default implementation does nothing */
 	}
 	

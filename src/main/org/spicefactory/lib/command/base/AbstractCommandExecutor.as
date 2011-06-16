@@ -92,9 +92,13 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	protected function get lifecycle () : CommandLifecycle {
 		if (!_lifecycle) {
-			_lifecycle = new DefaultCommandLifecycle();
+			_lifecycle = createLifecycle();
 		}
 		return _lifecycle;
+	}
+	
+	protected function createLifecycle () : CommandLifecycle {
+		return new DefaultCommandLifecycle();
 	}
     
     /**
@@ -104,9 +108,16 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
      */
     protected function get data () : CommandData {
     	if (!_data) {
-    		_data = new DefaultCommandData();
+    		var newData:CommandData = createData();
+    		_data = (newData is DefaultCommandData) 
+    			? newData as DefaultCommandData
+    			: new DefaultCommandData(newData);
     	}
     	return _data;
+    }
+    
+    protected function createData () : CommandData {
+    	return new DefaultCommandData();
     }
     
 	/**
@@ -141,8 +152,9 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		
 		if (!(com is AsyncCommand)) {
 			activeCommands.remove(com);
-			lifecycle.afterCompletion(com);
-			commandComplete(DefaultCommandResult.forCompletion(com, null));
+			var result:CommandResult = DefaultCommandResult.forCompletion(com, null);
+			lifecycle.afterCompletion(com, result);
+			commandComplete(result);
 		}
 	}
 	
@@ -158,19 +170,19 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		com.removeEventListener(CommandEvent.CANCEL, commandCancelledHandler);
 	}
 	
-	private function removeActiveCommand (com:AsyncCommand) : void {
+	private function removeActiveCommand (com:AsyncCommand, result:CommandResult) : void {
 		if (suspended) {
 			throw new IllegalStateError("Child command " + com 
 					+ " completed while executor was suspended");
 		}
 		removeListeners(com);
 		activeCommands.remove(com);
-		lifecycle.afterCompletion(com);
+		lifecycle.afterCompletion(com, result);
 	}
 
 	private function commandCompleteHandler (event:CommandResultEvent) : void {
 		var com:AsyncCommand = event.target as AsyncCommand;
-		removeActiveCommand(com);
+		removeActiveCommand(com, event);
 		_data.addValue(event.value);
 		commandComplete(event);
 	}
@@ -190,7 +202,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	private function commandErrorHandler (event:CommandResultEvent) : void {
 		var com:AsyncCommand = event.target as AsyncCommand;
-		removeActiveCommand(com);
+		removeActiveCommand(com, event);
 		commandError(com, event.value);
 	}
 	
@@ -205,9 +217,10 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	private function commandCancelledHandler (event:CommandEvent) : void {
 		var com:AsyncCommand = event.target as AsyncCommand;
-		removeActiveCommand(com);
+		var result:CommandResult = DefaultCommandResult.forCancellation(com);
+		removeActiveCommand(com, result);
 		if (processCancellations) {
-			commandComplete(DefaultCommandResult.forCancellation(com));
+			commandComplete(result);
 		}
 		else {
 			cancel();
