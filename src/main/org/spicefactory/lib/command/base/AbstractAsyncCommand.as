@@ -49,10 +49,10 @@ public class AbstractAsyncCommand extends EventDispatcher implements AsyncComman
 	 */
 	public function AbstractAsyncCommand (description:String = null) {
 		this.description = description || "[AsyncCommand]";
-		addEventListener(CommandEvent.CANCEL, handleCancellation, false, 2);		
+		addEventListener(CommandEvent.CANCEL, handleCancellation, false, 2); // higher prio, status must be reset before external listeners get invoked	 	
 	}
 	
-	private function handleCancellation () : void {
+	private function handleCancellation (event: CommandEvent) : void {
 		_active = false;
 	}
 	
