@@ -230,8 +230,8 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	/**
 	 * @private
 	 */
-	protected override function complete (result:Object = undefined) : void {
-		if (result === undefined) {
+	protected override function complete (result:Object = null) : void {
+		if (result === null) {
 			result = data;
 		}
  		super.complete(result);
