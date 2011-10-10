@@ -102,11 +102,11 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 		startTimer();
 	}
 	
-	private function commandInactive (event:CommandResultEvent) : void {
+	private function commandInactive (event:CommandEvent) : void {
 		cancelTimer();
 	}
 	
-	private function commandActive (event:CommandResultEvent) : void {
+	private function commandActive (event:CommandEvent) : void {
 		startTimer();
 	}
 	
