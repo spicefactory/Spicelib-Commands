@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns:adobe="http://www.adobe.com/2009/flexUnitUIRunner"
+	creationComplete="run()" 
+	>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.logging.LogEventLevel;
+			import org.flexunit.listeners.UIListener;
+			import org.flexunit.runner.FlexUnitCore;
+	 
+			private var core:FlexUnitCore;
+			
+			public function run():void {
+				core = new FlexUnitCore();
+				core.addListener(new UIListener(uiListener));
+				core.run( CommandSuite );
+			}
+	 
+		]]>
+	</mx:Script>
+	
+	<mx:TraceTarget level="{LogEventLevel.INFO}">
+		<mx:filters>
+			<mx:String>org.spicefactory.*</mx:String>
+		</mx:filters>
+	</mx:TraceTarget>
+	
+	<adobe:TestRunnerBase id="uiListener" width="100%" height="100%"  />
+	
+</mx:Application>
