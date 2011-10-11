@@ -62,7 +62,7 @@ public class ParallelCommands extends AbstractCommandExecutor implements Command
 	 * @private
 	 */	
 	protected override function doExecute () : void {
-		if (commands.isEmpty()) {
+		if (!commands.length) {
 			complete();
 			return;
 		}
