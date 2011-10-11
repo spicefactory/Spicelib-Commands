@@ -54,7 +54,7 @@ public class CommandExecutorFailure {
 	public function get message () : String {
 		var msg:String = "Execution of " + executor + " failed.";
 		if (!(cause is CommandExecutorFailure)) {
-			msg += "\nCause: Target command" + target + " failed.";
+			msg += "\nCause: Target command " + target + " failed.";
 		}
 		msg +=	"\nCause: ";
 		if (cause is Error) {
