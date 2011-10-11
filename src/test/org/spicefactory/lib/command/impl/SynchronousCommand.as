@@ -23,16 +23,33 @@ import org.spicefactory.lib.command.Command;
 public class SynchronousCommand implements Command {
 
 
-	private var _executions:int = 0;
+	private var _executions:uint = 0;
+	private static var _totalExecutions: uint = 0;
+	private var throwError: Boolean;
 	
 	
-	public function get executions () : int {
+	function SynchronousCommand (throwError: Boolean = false) {
+		this.throwError = throwError;
+	}
+	
+	public static function get totalExecutions (): uint {
+		return _totalExecutions;
+	}
+	
+	public static function resetTotalExecutions (): void {
+		_totalExecutions = 0;
+	}
+	
+	
+	public function get executions (): uint {
 		return _executions;
 	}
 
 
 	public function execute () : void {
 		_executions++;
+		_totalExecutions++;
+		if (throwError) throw new Error("This error is expected");
 	}
 	
 	

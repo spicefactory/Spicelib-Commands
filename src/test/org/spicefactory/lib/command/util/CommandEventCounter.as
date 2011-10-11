@@ -16,7 +16,9 @@
 package org.spicefactory.lib.command.util {
 
 import org.flexunit.assertThat;
+import org.hamcrest.collection.arrayWithSize;
 import org.hamcrest.object.equalTo;
+import org.hamcrest.object.sameInstance;
 import org.spicefactory.lib.command.AsyncCommand;
 import org.spicefactory.lib.command.events.CommandEvent;
 import org.spicefactory.lib.command.events.CommandResultEvent;
@@ -32,14 +34,22 @@ public class CommandEventCounter {
 	private var _results: Array = new Array();
 	private var _errors: Array = new Array();
 	private var _events: Dictionary = new Dictionary();
+	
+	private var _resultCallbacks: Array = new Array();
+	private var _errorCallbacks: Array = new Array();
+	private var _cancelCallbacks: uint = 0;
 
 
-	function CommandEventCounter (target: AsyncCommand) {
-		target.addEventListener(CommandResultEvent.COMPLETE, handleResultEvent);
-		target.addEventListener(CommandResultEvent.ERROR, handleResultEvent);
-		target.addEventListener(CommandEvent.CANCEL, handleEvent);
-		target.addEventListener(CommandEvent.SUSPEND, handleEvent);
-		target.addEventListener(CommandEvent.RESUME, handleEvent);
+	function CommandEventCounter (target: AsyncCommand = null) {
+		if (target) this.target = target;
+	}
+	
+	public function set target (value: AsyncCommand): void {
+		value.addEventListener(CommandResultEvent.COMPLETE, handleResultEvent);
+		value.addEventListener(CommandResultEvent.ERROR, handleResultEvent);
+		value.addEventListener(CommandEvent.CANCEL, handleEvent);
+		value.addEventListener(CommandEvent.SUSPEND, handleEvent);
+		value.addEventListener(CommandEvent.RESUME, handleEvent);
 	}
 
 	private function handleResultEvent (event: CommandResultEvent): void {
@@ -61,6 +71,25 @@ public class CommandEventCounter {
 		assertThat(eventCount(CommandEvent.RESUME), equalTo(resume));
 	}
 	
+	public function assertCallbacks (complete: uint, error: uint = 0, cancel: uint = 0): void {
+		assertThat(_resultCallbacks, arrayWithSize(complete));
+		assertThat(_errorCallbacks, arrayWithSize(error));
+		assertThat(_cancelCallbacks, equalTo(cancel));
+	}
+	
+	public function resultCallback (result: Object = null): void {
+		_resultCallbacks.push(result);
+	}
+	
+	public function errorCallback (error: Object = null): void {
+		_errorCallbacks.push(error);
+	}
+	
+	public function cancelCallback (): void {
+		_cancelCallbacks++;
+	}
+	
+	
 	private function eventCount (type: String): uint {
 		return _events[type] || 0;
 	}
@@ -75,12 +104,21 @@ public class CommandEventCounter {
 	
 	public function getResult (): Object {
 		assertThat(eventCount(CommandResultEvent.COMPLETE), equalTo(1));
+		assertThat(_resultCallbacks, arrayWithSize(1));
+		assertThat(_resultCallbacks[0], sameInstance(_results[0]));
 		return _results[0];
 	}
 	
 	public function getError (): Object {
 		assertThat(eventCount(CommandResultEvent.ERROR), equalTo(1));
+		assertThat(_errorCallbacks, arrayWithSize(1));
+		assertThat(_errorCallbacks[0], sameInstance(_errors[0]));
 		return _errors[0];
+	}
+	
+	public function getErrorFromCallback (): Object {
+		assertThat(_errorCallbacks, arrayWithSize(1));
+		return _errorCallbacks[0];
 	}
 	
 }
