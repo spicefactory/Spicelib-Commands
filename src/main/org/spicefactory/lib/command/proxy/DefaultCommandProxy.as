@@ -16,9 +16,8 @@
 
 package org.spicefactory.lib.command.proxy {
 
-import flash.events.TimerEvent;
-import flash.utils.Timer;
 import org.spicefactory.lib.command.Command;
+import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.base.AbstractCancellableCommand;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
@@ -28,6 +27,9 @@ import org.spicefactory.lib.command.events.CommandTimeout;
 import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.logging.LogContext;
 import org.spicefactory.lib.logging.Logger;
+
+import flash.events.TimerEvent;
+import flash.utils.Timer;
 
 
 	
@@ -108,6 +110,13 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 	
 	private function commandActive (event:CommandEvent) : void {
 		startTimer();
+	}
+	
+	/**
+	 * @private
+	 */
+	protected override function commandComplete (result:CommandResult) : void {
+		complete(result.value);
 	}
 	
 	private function startTimer () : void {
