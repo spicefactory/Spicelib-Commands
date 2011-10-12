@@ -27,6 +27,19 @@ public class AsynchronousCommand extends AbstractAsyncCommand {
 	private var _completions:int = 0;
 	private var _errors:int = 0;
 	
+	private var _injection: Object;
+	
+	function AsynchronousCommand (optionalInjection: CommandModel = null) {
+		if (optionalInjection) {
+			_injection = optionalInjection.value;
+			optionalInjection.markAsInjected();
+		}
+	}
+	
+	
+	public function get injection () : Object {
+		return _injection;
+	}
 	
 	public function get executions () : int {
 		return _executions;
