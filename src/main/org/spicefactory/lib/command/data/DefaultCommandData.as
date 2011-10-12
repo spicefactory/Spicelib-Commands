@@ -67,12 +67,15 @@ public class DefaultCommandData implements CommandData {
 		var results:Array = [];
 		try {
 			for each (var value:Object in data) {
-				if (value is type) {
-					results.push(value);
-				}
-				else if (value is CommandData) {
+				if (value is CommandData) {
 					results = results.concat(CommandData(value).getAllObjects(type));
 				}
+				else if (value is type) {
+					results.push(value);
+				}
+			}
+			if (parent) {
+				results = results.concat(parent.getAllObjects(type));
 			}
 		} 
 		finally {
