@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.command.light.LightCommandAdapterFactory;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.data.DefaultCommandData;
@@ -35,8 +36,9 @@ public class AbstractCommandBuilder implements CommandBuilder {
 
 
 	private var proxy:DefaultCommandProxy;
-	private var _data:DefaultCommandData = new DefaultCommandData();
 	private var _domain:ApplicationDomain;
+	
+	private static var lightAdapterInitialized: Boolean;
 
 
 	function AbstractCommandBuilder (proxy:DefaultCommandProxy = null) {
@@ -57,7 +59,7 @@ public class AbstractCommandBuilder implements CommandBuilder {
 	}
 	
 	protected function addData (value:Object) : void {
-		_data.addValue(value);
+		proxy.addData(value);
 	}
 	
 	protected function setTimeout (milliseconds:uint) : void {
@@ -101,19 +103,28 @@ public class AbstractCommandBuilder implements CommandBuilder {
 			return Commands.create(command as Class).build();
 		}
 		else {
+			initializeLightAdapter();
 			return CommandAdapters.createAdapter(command, domain);
 		}
 	}
 	
 	public function execute () : CommandProxy {
 		var proxy:CommandProxy = build();
-		proxy.prepare(new DefaultCommandLifecycle(domain), _data);
 		proxy.execute();
 		return proxy;
 	}
 
 	public function build () : CommandProxy {
+		proxy.domain = domain;
 		return proxy;
+	}
+	
+	
+	private static function initializeLightAdapter (): void {
+		if (!lightAdapterInitialized) {
+			lightAdapterInitialized = true;
+			CommandAdapters.addFactory(new LightCommandAdapterFactory());
+		}
 	}
 	
 	

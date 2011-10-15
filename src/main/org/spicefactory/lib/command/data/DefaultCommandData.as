@@ -15,7 +15,6 @@
  */
 package org.spicefactory.lib.command.data {
 
-import org.spicefactory.lib.command.data.CommandData;
 
 /**
  * @author Jens Halm
@@ -36,8 +35,7 @@ public class DefaultCommandData implements CommandData {
 	public function addValue (value:Object) : void {
 		data.push(value);
 	}
-
-
+	
 	public function getObject (type:Class = null) : Object {
 		if (inProgress) return null;
 		type ||= Object;

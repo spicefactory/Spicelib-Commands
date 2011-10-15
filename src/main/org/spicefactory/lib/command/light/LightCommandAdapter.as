@@ -65,6 +65,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		this.executeMethod = executeMethod;
 		this.cancelMethod = cancelMethod;
 		this.async = async;
+		_data = new DefaultCommandData();
 	}
 
 
@@ -85,7 +86,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	 */
 	public function prepare (lifecycle:CommandLifecycle, data:CommandData) : void {
 		_lifecycle = lifecycle;
-		_data = new DefaultCommandData(data);	
+		_data = new DefaultCommandData(data);
 	}
 	
 	protected function get lifecycle () : CommandLifecycle {
@@ -108,7 +109,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
     }
 	
 	protected override function doExecute () : void {
-		_lifecycle.beforeExecution(target, data);
+		lifecycle.beforeExecution(target, data);
 		if (callbackProperty) {
 			callbackProperty.setValue(target, callback);
 		}
@@ -127,12 +128,12 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 					executeMethod.invoke(target, params);
 					complete();
 				}
-				_lifecycle.afterCompletion(target, DefaultCommandResult.forCompletion(target, result));
+				lifecycle.afterCompletion(target, DefaultCommandResult.forCompletion(target, result));
 			}
 		}
 		catch (e:Error) {
 			error(e);
-			_lifecycle.afterCompletion(target, DefaultCommandResult.forError(target, e));
+			lifecycle.afterCompletion(target, DefaultCommandResult.forError(target, e));
 		}
 	}
 	
@@ -141,8 +142,9 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		for each (var param:Parameter in executeMethod.parameters) {
 			if (param.type.getClass() == Function) {
 				params.push(callback);
+				break;
 			}
-			var value:Object = _data.getObject(param.type.getClass());
+			var value:Object = data.getObject(param.type.getClass());
 			if (value) {
 				params.push(value);
 			}
@@ -175,7 +177,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 			cr = DefaultCommandResult.forCompletion(target, result);
 			complete(result);
 		}
-		_lifecycle.afterCompletion(target, cr);
+		lifecycle.afterCompletion(target, cr);
  	}
  	
  	private function isError (result:Object) : Boolean {
@@ -190,7 +192,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	 */
 	protected override function doCancel () : void {
 		cancelMethod.invoke(target, []);
-		_lifecycle.afterCompletion(target, DefaultCommandResult.forCancellation(this));
+		lifecycle.afterCompletion(target, DefaultCommandResult.forCancellation(this));
 	}
 
 	

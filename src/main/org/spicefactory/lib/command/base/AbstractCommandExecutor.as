@@ -29,6 +29,8 @@ import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.logging.LogContext;
 import org.spicefactory.lib.logging.Logger;
 
+import flash.system.ApplicationDomain;
+
 /**
  * Abstract base class for CommandGroup implementations.
  * Manages multiple child commands and is itself a command (Composite Design Pattern)
@@ -44,8 +46,10 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	private var activeCommands:List = new List();
 	
-	private var _data:DefaultCommandData = new DefaultCommandData();
+	private var _data:DefaultCommandData;
+	private var values:Array = new Array();
 	
+	private var _domain:ApplicationDomain;
 	private var _lifecycle:CommandLifecycle;
 	
 	private var processErrors:Boolean;
@@ -82,12 +86,30 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		return true;
 	}
 	
+	public function addData (value:Object) : void {
+		if (_data) {
+			_data.addValue(value);
+		}
+		else {
+			values.push(value);
+		}
+	}
+	
+	public function get domain (): ApplicationDomain {
+		return _domain;
+	}
+
+	public function set domain (domain: ApplicationDomain): void {
+		_domain = domain;
+	}
+	
 	/**
 	 * @inheritDoc
 	 */
 	public function prepare (lifecycle:CommandLifecycle, data:CommandData) : void {
 		_lifecycle = lifecycle;
-		_data = new DefaultCommandData(data);	
+		_data = new DefaultCommandData(data);
+		addValues();
 	}
 	
 	protected function get lifecycle () : CommandLifecycle {
@@ -98,7 +120,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	}
 	
 	protected function createLifecycle () : CommandLifecycle {
-		return new DefaultCommandLifecycle();
+		return new DefaultCommandLifecycle(domain);
 	}
     
     /**
@@ -112,8 +134,16 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
     		_data = (newData is DefaultCommandData) 
     			? newData as DefaultCommandData
     			: new DefaultCommandData(newData);
+    		addValues();
     	}
     	return _data;
+    }
+    
+    private function addValues () : void {
+    	for each (var value:Object in values) {
+			_data.addValue(value);
+		}
+		values = [];
     }
     
     protected function createData () : CommandData {
@@ -283,7 +313,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		}
 		activeCommands.removeAll();
 	}
-	
+
 		
 }
 	

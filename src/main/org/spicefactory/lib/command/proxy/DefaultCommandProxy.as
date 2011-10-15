@@ -84,7 +84,7 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 		return _timeout;
 	}
 
-	public function set timeout (timeout:uint):void {
+	public function set timeout (timeout:uint) : void {
 		_timeout = timeout;
 	}
 	
