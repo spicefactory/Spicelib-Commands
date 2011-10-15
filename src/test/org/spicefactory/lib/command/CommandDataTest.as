@@ -15,6 +15,7 @@
  */
 package org.spicefactory.lib.command {
 
+import org.hamcrest.mxml.object.NotNull;
 import org.flexunit.assertThat;
 import org.hamcrest.collection.arrayWithSize;
 import org.hamcrest.core.isA;
@@ -27,6 +28,8 @@ import org.spicefactory.lib.command.builder.Commands;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.impl.AsynchronousCommand;
 import org.spicefactory.lib.command.impl.CommandModel;
+import org.spicefactory.lib.command.impl.SyncLightDataCommand;
+import org.spicefactory.lib.command.impl.SyncLightResultCommand;
 /**
  * @author Jens Halm
  */
@@ -93,6 +96,30 @@ public class CommandDataTest {
 		assertThat(model.injected, isFalse());
 		com1.forceCompletion(model);
 		assertThat(model.injected, isTrue());
+	}
+	
+	[Test]
+	public function lightCommand (): void {
+		var com1: SyncLightResultCommand = new SyncLightResultCommand(new CommandModel("foo"));
+		var com2: SyncLightDataCommand = new SyncLightDataCommand();
+		var allResults:Object;
+		var allResultsHandler: Function = function (param: Object): void {
+			allResults = param;
+		};
+		var lastResult:Object;
+		var lastResultHandler: Function = function (param: Object): void {
+			lastResult = param;
+		};
+		Commands.asSequence().add(com1).add(com2).allResults(allResultsHandler).lastResult(lastResultHandler).execute();
+		assertThat(lastResult, equalTo("foo"));
+		assertThat(allResults, isA(CommandData));
+		var data: CommandData = CommandData(allResults);
+		assertThat(data.getObject(String), equalTo("foo"));
+		assertThat(data.getObject(CommandData), notNullValue());
+		assertThat(data.getAllObjects(), arrayWithSize(2));
+		
+		assertThat(com1.executed, isTrue());
+		assertThat(com2.model, notNullValue());
 	}
 	
 	
