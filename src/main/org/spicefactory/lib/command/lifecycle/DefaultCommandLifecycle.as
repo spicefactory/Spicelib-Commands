@@ -52,7 +52,7 @@ public class DefaultCommandLifecycle implements CommandLifecycle {
 						+ param.type.name);
 			}
 			else {
-				params.push(undefined);
+				break;
 			}
 		}
 		return info.newInstance(params);
