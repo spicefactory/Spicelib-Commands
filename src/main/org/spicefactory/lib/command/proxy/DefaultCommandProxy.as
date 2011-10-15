@@ -96,10 +96,16 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 			throw IllegalStateError("Either target or type property must be set");
 		}
 		if (!_target) {
-			var target:Object = lifecycle.createInstance(_type, data);
-			_target = (target is Command)
-				? target as Command
-				: CommandAdapters.createAdapter(target);
+			try {
+				var target:Object = lifecycle.createInstance(_type, data);
+				_target = (target is Command)
+					? target as Command
+					: CommandAdapters.createAdapter(target);
+			}
+			catch (e:Error) {
+				error(new CommandExecutorFailure(this, _target, e));
+				return;
+			}
 		}
 		executeCommand(_target);
 		startTimer();
