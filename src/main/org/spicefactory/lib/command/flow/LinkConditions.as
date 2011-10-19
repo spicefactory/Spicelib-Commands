@@ -49,7 +49,7 @@ import org.spicefactory.lib.command.flow.LinkCondition;
 class DefaultCondition implements LinkCondition {
 
 	public function matches (result:CommandResult) : Boolean {
-		return true;
+		return result.complete;
 	}
 	
 }
