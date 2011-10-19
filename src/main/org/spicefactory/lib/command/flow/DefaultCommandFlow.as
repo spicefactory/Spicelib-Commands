@@ -90,7 +90,7 @@ public class DefaultCommandFlow extends AbstractCommandExecutor implements Comma
 		}
 		if (!defaultLink || !processLink(defaultLink, result, processor)) {
 			logger.error("No link processed result {0}, cancelling flow {1}", result, this);
-			if (result.complete) {
+			if (result.complete || result.value == null) {
 				cancel();
 			}
 			else {
