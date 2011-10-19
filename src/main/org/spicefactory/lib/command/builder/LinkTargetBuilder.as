@@ -127,8 +127,8 @@ class ExecuteCommandInstanceAction implements ResolvableAction {
 	}
 
 	public function resolve (types:Map, instances:Map) : void {
-		if (types.containsKey(instance)) {
-			command = types.get(instance) as Command;
+		if (instances.containsKey(instance)) {
+			command = instances.get(instance) as Command;
 		}
 		else {
 			throw new IllegalStateError("No link specified for command instance " + instance);
