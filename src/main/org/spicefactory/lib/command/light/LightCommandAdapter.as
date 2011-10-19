@@ -61,7 +61,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	function LightCommandAdapter (target:Object, executeMethod:Method, 
 			callback:Property, cancelMethod:Method, async:Boolean) {
 		_target = target;
-		this.callbackProperty = callbackProperty;
+		this.callbackProperty = callback;
 		this.executeMethod = executeMethod;
 		this.cancelMethod = cancelMethod;
 		this.async = async;

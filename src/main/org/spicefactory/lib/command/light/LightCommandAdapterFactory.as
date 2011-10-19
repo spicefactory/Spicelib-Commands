@@ -53,6 +53,7 @@ public class LightCommandAdapterFactory implements CommandAdapterFactory {
 		if (callback && callback.type.getClass() != Function) {
 			callback = null;
 		}
+		if (callback) async = true;
 		var cancel:Method = info.getMethod("cancel");
 		if (cancel && cancel.parameters.length > 0) {
 			cancel = null;
