@@ -84,7 +84,7 @@ public class DefaultCommandFlow extends AbstractCommandExecutor implements Comma
 	 */
 	protected override function commandComplete (result:CommandResult) : void {
 		var mappedLinks:List = links.getAll(result.command);
-		var processor:Processor = new Processor(execute, complete, cancel, error);
+		var processor:Processor = new Processor(executeCommand, complete, cancel, error);
 		for each (var link:CommandLink in mappedLinks) {
 			if (processLink(link, result, processor)) return;
 		}
