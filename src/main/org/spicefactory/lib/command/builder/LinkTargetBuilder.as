@@ -75,6 +75,7 @@ public class LinkTargetBuilder {
 
 import org.spicefactory.lib.collection.Map;
 import org.spicefactory.lib.command.Command;
+import org.spicefactory.lib.command.builder.Commands;
 import org.spicefactory.lib.command.flow.CommandLinkProcessor;
 import org.spicefactory.lib.command.flow.LinkAction;
 import org.spicefactory.lib.errors.IllegalStateError;
@@ -107,7 +108,7 @@ class ExecuteCommandTypeAction implements ResolvableAction {
 			command = types.get(type) as Command;
 		}
 		else {
-			throw new IllegalStateError("No link specified for command type " + type);
+			command = Commands.create(type).build();
 		}
 	}
 
@@ -131,7 +132,7 @@ class ExecuteCommandInstanceAction implements ResolvableAction {
 			command = instances.get(instance) as Command;
 		}
 		else {
-			throw new IllegalStateError("No link specified for command instance " + instance);
+			command = Commands.wrap(instance).build();
 		}
 	}
 

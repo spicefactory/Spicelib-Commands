@@ -34,8 +34,8 @@ public class CommandFlowBuilder extends AbstractCommandBuilder {
 	
 	
 	private var _description:String;
+	private var _defaultLink: DefaultLinkBuilder;
 	private var links:Array = new Array();
-	
 	
 	public function add (command:Object) : CommandLinkBuilder {
 		var link:CommandLinkBuilder = new CommandLinkBuilder(command);
@@ -47,6 +47,11 @@ public class CommandFlowBuilder extends AbstractCommandBuilder {
 		var link:CommandLinkBuilder = new CommandLinkBuilder(commandType);
 		links.push(link);
 		return link;
+	}
+	
+	public function defaultLink (): DefaultLinkBuilder {
+		_defaultLink = new DefaultLinkBuilder(this);
+		return _defaultLink;
 	}
 	
 	public function domain (domain:ApplicationDomain) : CommandFlowBuilder {
@@ -114,6 +119,7 @@ public class CommandFlowBuilder extends AbstractCommandBuilder {
 				}
 			}
 		}
+		if (_defaultLink) flow.setDefaultLink(_defaultLink.link);
 
 		setTarget(flow);
 		return super.build();

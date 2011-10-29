@@ -88,14 +88,10 @@ public class DefaultCommandFlow extends AbstractCommandExecutor implements Comma
 		for each (var link:CommandLink in mappedLinks) {
 			if (processLink(link, result, processor)) return;
 		}
-		if (!defaultLink || !processLink(defaultLink, result, processor)) {
-			logger.error("No link processed result {0}, cancelling flow {1}", result, this);
-			if (result.complete || result.value == null) {
-				cancel();
-			}
-			else {
-				error(result.value);
-			}
+		var fallback:CommandLink = defaultLink || CommandLinks.defaultLink;
+		if (!processLink(fallback, result, processor)) {
+			logger.error("Default link did not process result in flow {1}", result.value, result.command);
+			error("Default link did not process result " + result.value);
 		}
 	}
 	

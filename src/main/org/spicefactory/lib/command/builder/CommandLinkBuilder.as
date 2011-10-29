@@ -60,7 +60,7 @@ public class CommandLinkBuilder {
 		return newTargetBuilder(LinkConditions.forResultProperty(name, value));
 	}
 	
-	public function linkDefault () : LinkTargetBuilder {
+	public function linkAllResults () : LinkTargetBuilder {
 		return newTargetBuilder(LinkConditions.forDefault());
 	}
 	
