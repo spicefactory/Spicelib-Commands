@@ -13,34 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.spicefactory.lib.command.impl {
+package org.spicefactory.lib.command.model {
 
-import org.spicefactory.lib.command.model.FlowModel;
-import org.spicefactory.lib.errors.IllegalStateError;
+import org.flexunit.assertThat;
+import org.hamcrest.collection.array;
 /**
  * @author Jens Halm
  */
-public class SyncLightDataCommand {
+public class FlowModel {
 	
 	
-	public var model: CommandModel;
+	private var commands: Array = new Array();
 	
-	private var throwError: Boolean;
 	
-	function SyncLightDataCommand (throwError: Boolean = false) {
-		this.throwError = throwError;
+	public function addCommand (id: String): void {
+		commands.push(id);
 	}
 	
 	
-	public function execute (param:CommandModel, flow:FlowModel = null) : Object {
-		model = param;
-		if (throwError) {
-			throw new IllegalStateError("Sorry, I was told to throw an Error");
-		}
-		if (flow) {
-			flow.addCommand(model.value.toString());
-		}
-		return model.value;
+	public function assertFlow (...rest) : void {
+		assertThat(commands, array(rest));
 	}
 	
 	

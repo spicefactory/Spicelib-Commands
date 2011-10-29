@@ -14,33 +14,43 @@
  * limitations under the License.
  */
 package org.spicefactory.lib.command.impl {
-
-import org.spicefactory.lib.command.model.FlowModel;
 import org.spicefactory.lib.errors.IllegalStateError;
+import org.spicefactory.lib.command.model.FlowModel;
 /**
  * @author Jens Halm
  */
-public class SyncLightDataCommand {
+public class AsyncLightFlowCommand {
 	
 	
-	public var model: CommandModel;
+	private var result: Object;
+	private var id: String;
 	
-	private var throwError: Boolean;
+	public var callback:Function;
 	
-	function SyncLightDataCommand (throwError: Boolean = false) {
-		this.throwError = throwError;
+	function AsyncLightFlowCommand (id: String, result: Object) {
+		this.result = result;
+		this.id = id;
 	}
 	
 	
-	public function execute (param:CommandModel, flow:FlowModel = null) : Object {
-		model = param;
-		if (throwError) {
-			throw new IllegalStateError("Sorry, I was told to throw an Error");
-		}
-		if (flow) {
-			flow.addCommand(model.value.toString());
-		}
-		return model.value;
+	public function execute (model: FlowModel) : void {
+		model.addCommand(id);
+	}
+
+	public function complete () : void {
+		callback(result);
+	}
+	
+	public function error () : void {
+		callback(new IllegalStateError("This error is expected"));
+	}
+	
+	public function cancel () : void {
+		
+	}
+	
+	public function forceCancellation () : void {
+		callback();
 	}
 	
 	
