@@ -20,13 +20,13 @@ import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
 	
 /**
- * A CommandGroup implementation that executes its child commands concurrently.
+ * A CommandGroup implementation that executes its child commands in parallel.
  * If a group is started all the commands that were added to it will be started immediately.
  * If a command gets added to a running group, that command will be started immediately.
  * When all child commands have completed their operation this group will fire its
  * <code>COMPLETE</code> event. If a group gets cancelled or suspended all child
  * commands that are still running will also be cancelled or suspended in turn.
- * If a child command throws an <code>ERROR</code> event and the <code>ignoreChildErrors</code> property
+ * If a child command throws an <code>ERROR</code> event and the <code>skipErrors</code> property
  * of this group is set to false, then all child commands that are still running will be cancelled
  * and the group will fire an <code>ERROR</code> event.
  * 
@@ -42,6 +42,11 @@ public class ParallelCommands extends AbstractCommandExecutor implements Command
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param description a description of this command group
+	 * @param skipErrors if true an error in a command executed by this instance leads to commandComplete getting called,
+	 * if false the executor will stop with an error result 
+	 * @param skipCancelllations if true the cancelleation of a command executed by this instance leads 
+	 * to commandComplete getting called, if false the executor will stop with an error result 
 	 */
 	function ParallelCommands (description:String = null, 
 			skipErrors:Boolean = false, skipCancelllations:Boolean = false) {

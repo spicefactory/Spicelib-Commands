@@ -26,6 +26,8 @@ import org.spicefactory.lib.logging.LogContext;
 import org.spicefactory.lib.logging.Logger;
 
 /**
+ * Default implementation of the CommandFlow interface.
+ * 
  * @author Jens Halm
  */
 public class DefaultCommandFlow extends AbstractCommandExecutor implements CommandFlow {
@@ -40,8 +42,9 @@ public class DefaultCommandFlow extends AbstractCommandExecutor implements Comma
 	
 	
 	/**
-	 * Creates a new sequence.
+	 * Creates a new flow instance.
 	 * 
+	 * @param description a description of the flow
 	 */	
 	function DefaultCommandFlow (description:String = null) {
 		super(description, true, true);

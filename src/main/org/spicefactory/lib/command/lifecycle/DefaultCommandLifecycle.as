@@ -26,6 +26,12 @@ import flash.system.ApplicationDomain;
 
 	
 /**
+ * Default implementation of the CommandLifecycle interface.
+ * 
+ * <p>This implementation uses the specified CommandData to peform constructor
+ * injection when creating a new command instance. The <code>beforeExecution</code>
+ * and <code>afterCompletion</code> hooks in this implementation do nothing.
+ * 
  * @author Jens Halm
  */
 public class DefaultCommandLifecycle implements CommandLifecycle {
@@ -34,11 +40,19 @@ public class DefaultCommandLifecycle implements CommandLifecycle {
 	private var domain:ApplicationDomain;
 
 
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param domain the domain to use for reflecting on command classes
+	 */
 	function DefaultCommandLifecycle (domain:ApplicationDomain = null) {
 		this.domain = domain;
 	}
 
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function createInstance (type:Class, data:CommandData) : Object {
 		var info:ClassInfo = ClassInfo.forClass(type, domain);
 		var params:Array = [];
@@ -58,10 +72,16 @@ public class DefaultCommandLifecycle implements CommandLifecycle {
 		return info.newInstance(params);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function beforeExecution (command:Object, data:CommandData) : void {
 		/* default implementation does nothing */
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function afterCompletion (command:Object, result:CommandResult) : void {
 		/* default implementation does nothing */
 	}

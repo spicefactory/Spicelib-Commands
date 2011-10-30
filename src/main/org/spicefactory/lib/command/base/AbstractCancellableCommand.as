@@ -23,6 +23,13 @@ import org.spicefactory.lib.logging.Logger;
 
 	
 /**
+ * Abstract base implementation of the CancellableCommand interface. 
+ * 
+ * <p>A subclass of AbstractCancellableCommand is expected
+ * to override the <code>doStart</code> method, do its work and then call <code>complete</code>
+ * when the operation is done (or <code>error</code> when the command fails to complete successfully).
+ * It is also expected to override the <code>doCancel</code> method to cancel the actual operation</p> 
+ * 
  * @author Jens Halm
  */
 public class AbstractCancellableCommand extends AbstractAsyncCommand implements CancellableCommand {
@@ -34,7 +41,7 @@ public class AbstractCancellableCommand extends AbstractAsyncCommand implements 
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param description a description of this command for logging purposes
+	 * @param description a description of this command
 	 */
 	public function AbstractCancellableCommand (description:String = null) {
 		super(description);
@@ -42,8 +49,7 @@ public class AbstractCancellableCommand extends AbstractAsyncCommand implements 
 	
 	
 	/**
-	 * Cancels this command. If the command is not currently active,
-	 * invoking this method has no effect.
+	 * @inheritDoc
 	 */
 	public function cancel () : void {
 		if (!active) {
@@ -55,8 +61,7 @@ public class AbstractCancellableCommand extends AbstractAsyncCommand implements 
 	}
 	
 	/**
-	 * Invoked when this command gets cancelled, either due to an explicit invocation of the
-	 * cancel method or in case a timeout occurred. 
+	 * Invoked when this command gets cancelled. 
 	 * Subclasses should override this method and cancel the actual operation
 	 * this command performs.
 	 */		

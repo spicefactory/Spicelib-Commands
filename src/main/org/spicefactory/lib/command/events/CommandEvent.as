@@ -19,24 +19,41 @@ package org.spicefactory.lib.command.events {
 import flash.events.Event;
 	
 /**
- * 
+ * Event dispatched by commands to signal state changes.
  * 
  * @author Jens Halm
  */
 public class CommandEvent extends Event {
 	
 	
+	/**
+	 * Constant for the type of event fired when a command was cancelled.
+	 */
 	public static const CANCEL:String = "cancel";
 
+	/**
+	 * Constant for the type of event fired when a command was suspended.
+	 */
 	public static const SUSPEND:String = "suspend";
-
+	
+	/**
+	 * Constant for the type of event fired when a command was resumed.
+	 */
 	public static const RESUME:String = "resume";
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param type the type of the event
+	 */
     function CommandEvent (type:String) {
         super(type);
     }
     
+    /**
+     * The command that dispatched the event.
+     */
     public function get command () : Object {
     	return target;
     }

@@ -34,22 +34,42 @@ public class LinkTargetBuilder {
 	private var action:LinkAction;
 	
 	
+	/**
+	 * @private
+	 */
 	function LinkTargetBuilder (linkBuilder:CommandLinkBuilder, condition:LinkCondition) {
 		this.linkBuilder = linkBuilder;
 		this.condition = condition;
 	}
 	
 	
+	/**
+	 * Links to the specified command type as the next command to execute.
+	 * 
+	 * @param type the type of command to execute
+	 * @return the link builder to specify further links for the same command
+	 */
 	public function toCommandType (type:Class) : CommandLinkBuilder {
 		action = new ExecuteCommandTypeAction(type);
 		return linkBuilder;
 	}
 	
+	/**
+	 * Links to the specified command instance as the next command to execute.
+	 * 
+	 * @param command the command instance to execute
+	 * @return the link builder to specify further links for the same command
+	 */
 	public function toCommandInstance (command:Object) : CommandLinkBuilder {
 		action = new ExecuteCommandInstanceAction(command);
 		return linkBuilder;
 	}
 	
+	/**
+	 * Links to the end of the flow, meaning that the flow will signal successful completion.
+	 * 
+	 * @return the link builder to specify further links for the same command
+	 */
 	public function toFlowEnd () : CommandLinkBuilder {
 		action = new FlowEndAction();
 		return linkBuilder;
@@ -78,7 +98,6 @@ import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.builder.Commands;
 import org.spicefactory.lib.command.flow.CommandLinkProcessor;
 import org.spicefactory.lib.command.flow.LinkAction;
-import org.spicefactory.lib.errors.IllegalStateError;
 
 interface ResolvableAction extends LinkAction {
 	

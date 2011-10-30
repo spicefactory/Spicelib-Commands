@@ -17,6 +17,8 @@ package org.spicefactory.lib.command.data {
 
 
 /**
+ * Default implementation of the CommandData interface.
+ * 
  * @author Jens Halm
  */
 public class DefaultCommandData implements CommandData {
@@ -28,14 +30,29 @@ public class DefaultCommandData implements CommandData {
 	private var inProgress:Boolean;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param parent the parent to look up results not found in this instance
+	 */
 	function DefaultCommandData (parent:CommandData = null) {
 		this.parent = parent; 
 	}
 	
+	/**
+	 * Adds a value to this instance.
+	 * This method is usually only invoked by a command executor
+	 * that adds the result by one of its commands to this instance.
+	 * 
+	 * @param value the value to add to this instance
+	 */
 	public function addValue (value:Object) : void {
 		data.push(value);
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function getObject (type:Class = null) : Object {
 		if (inProgress) return null;
 		type ||= Object;
@@ -58,6 +75,9 @@ public class DefaultCommandData implements CommandData {
 		return null;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function getAllObjects (type:Class = null) : Array {
 		if (inProgress) return [];
 		type ||= Object;

@@ -19,6 +19,8 @@ package org.spicefactory.lib.command.base {
 import org.spicefactory.lib.command.CommandResult;
 	
 /**
+ * Default implementation of the CommandResult interface.
+ * 
  * @author Jens Halm
  */
 public class DefaultCommandResult implements CommandResult {
@@ -29,32 +31,61 @@ public class DefaultCommandResult implements CommandResult {
 	private var _complete:Boolean;
 
 
+	/**
+	 * @private
+	 */
 	function DefaultCommandResult (command:Object, value:Object = null, complete:Boolean = true) {
 		_command = command;
 		_value = value;
 		_complete = complete;
 	}
 	
+	/**
+	 * Creates a new instance for a command that successfully completed.
+	 * 
+	 * @param command the command that completed its execution
+	 * @param result the result produced by the command
+	 */
 	public static function forCompletion (command:Object, result:Object) : CommandResult {
 		return new DefaultCommandResult(command, result);
 	}
 	
+	/**
+	 * Creates a new instance for a command that failed to execute.
+	 * 
+	 * @param command the command that failed to execute
+	 * @param cause the cause of the error
+	 */
 	public static function forError (command:Object, cause:Object) : CommandResult {
 		return new DefaultCommandResult(command, cause, false);
 	}
 	
+	/**
+	 * Creates a new instance for a command that has been cancelled.
+	 * 
+	 * @param command the command that has been cancelled
+	 */
 	public static function forCancellation (command:Object) : CommandResult {
 		return new DefaultCommandResult(command, null, false);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function get command () : Object {
 		return _command;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function get value () : Object {
 		return _value;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function get complete () : Boolean {
 		return _complete;
 	}

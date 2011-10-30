@@ -17,10 +17,17 @@
 package org.spicefactory.lib.command.flow {
 	
 /**
+ * Represents an action to perform when a certain command link condition is met.
+ * 
  * @author Jens Halm
  */
 public interface LinkAction {
 	
+	/**
+	 * Execute the action using the specified processor.
+	 * 
+	 * @param processor the processor to use for perfoming the action
+	 */
 	function execute (processor:CommandLinkProcessor) : void;
 	
 }

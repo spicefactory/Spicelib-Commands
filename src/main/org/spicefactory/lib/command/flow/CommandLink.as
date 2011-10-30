@@ -18,13 +18,26 @@ package org.spicefactory.lib.command.flow {
 import org.spicefactory.lib.command.CommandResult;
 	
 /**
- * 
+ * Represents a single link between two commands or a command and a flow action like
+ * cancellation or completion.
  * 
  * @author Jens Halm
  */
 public interface CommandLink {
 	
 
+	/**
+	 * Invoked after a command in the flow finished executing.
+	 * The implementation is supposed to invoke the corresponding
+	 * action in the specified processor if the specified result
+	 * matches its conditions. If not the implementation should not
+	 * invoke anything on the processor in which case the next link
+	 * for the same command (if available) will get invoked 
+	 * (Chain of Responsiblity Pattern).
+	 * 
+	 * @param result the result the preceding command produced
+	 * @param processor the processor that can be used to specify the next action the flow should perform
+	 */
 	function link (result:CommandResult, processor:CommandLinkProcessor) : void;
 	
 	

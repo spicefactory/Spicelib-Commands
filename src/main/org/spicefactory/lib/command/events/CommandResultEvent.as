@@ -18,29 +18,48 @@ package org.spicefactory.lib.command.events {
 import org.spicefactory.lib.command.CommandResult;
 	
 /**
- * 
+ * Event dispatched by commands when they finished executing.
+ * This event also implements the <code>CommandResult</code> interface.
  * 
  * @author Jens Halm
  */
 public class CommandResultEvent extends CommandEvent implements CommandResult {
 	
 	
+	/**
+	 * Constant for the type of event fired when a command completed successfully.
+	 */
 	public static const COMPLETE:String = "complete";
 
+	/**
+	 * Constant for the type of event fired when a command aborted with an error.
+	 */
 	public static const ERROR:String = "error";
 	
 	
     private var _result:Object;
     
+    /**
+     * Creates a new instance.
+     * 
+     * @param type the type of the event
+     * @result the result produced by the command
+     */
     function CommandResultEvent (type:String, result:Object) {
         super(type);
         _result = result;
     }
     
+    /**
+     * @inheritDoc
+     */
     public function get value () : Object {
         return _result;
     }
     
+    /**
+     * @inheritDoc
+     */
     public function get complete () : Boolean {
     	return (type == COMPLETE);
     }

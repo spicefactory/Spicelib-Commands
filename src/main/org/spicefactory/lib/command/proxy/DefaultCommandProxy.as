@@ -35,6 +35,8 @@ import flash.utils.Timer;
 
 	
 /**
+ * Default implementation of the CommandProxy interface.
+ * 
  * @author Jens Halm
  */
 public class DefaultCommandProxy extends AbstractCommandExecutor implements CommandProxy {
@@ -52,6 +54,9 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 	private var proxyDescription:String;
 	
 	
+	/**
+	 * @private
+	 */
 	function DefaultCommandProxy () {
 		addEventListener(CommandResultEvent.COMPLETE, commandInactive, false, 2);
 		addEventListener(CommandResultEvent.ERROR, commandInactive, false, 2);
@@ -61,18 +66,34 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 	}
 	
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function get target () : Command {
 		return _target;
 	}
 	
+	/**
+	 * The target comamnd that this proxy should execute.
+	 * The <code>type</code> and <code>target</code> properties
+	 * are mutually exclusive.
+	 */
 	public function set target (value:Command) : void {
 		_target = value;
 	}
 	
+	/**
+	 * The type of comamnd that this proxy should execute.
+	 * The <code>type</code> and <code>target</code> properties
+	 * are mutually exclusive.
+	 */
 	public function set type (value:Class) : void {
 		_type = value;
 	}
 	
+	/**
+	 * A description of the command executed by this proxy.
+	 */
 	public function set description (value:String) : void {
 		proxyDescription = value;
 	}

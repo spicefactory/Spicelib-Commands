@@ -22,11 +22,19 @@ import org.spicefactory.lib.command.CommandExecutor;
 import org.spicefactory.lib.command.SuspendableCommand;
 	
 /**
+ * Utility methods for determining the capabilities of a target command.
+ * 
  * @author Jens Halm
  */
 public class CommandUtil {
 	
 	
+	/**
+	 * Determines whether the target command can be cancelled.
+	 * 
+	 * @param com the target command
+	 * @return true if the target command can be cancelled
+	 */
 	public static function isCancellable (com:Command) : Boolean {
 		if (com is CommandExecutor) {
 			return CommandExecutor(com).cancellable;
@@ -36,6 +44,12 @@ public class CommandUtil {
 		}
 	}
 	
+	/**
+	 * Determines whether the target command can be suspended.
+	 * 
+	 * @param com the target command
+	 * @return true if the target command can be suspended
+	 */
 	public static function isSuspendable (com:Command) : Boolean {
 		if (com is CommandExecutor) {
 			return CommandExecutor(com).suspendable;

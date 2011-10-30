@@ -16,21 +16,38 @@
 
 package org.spicefactory.lib.command {
 	
+/**
+ * Dispatched when the command is suspended.
+ */
 [Event(name="suspend", type="org.spicefactory.lib.command.events.CommandEvent")]
 
+/**
+ * Dispatched when the command is resumed.
+ */
 [Event(name="resume", type="org.spicefactory.lib.command.events.CommandEvent")]
 	
 /**
- * 
+ * Represents a command that can get cancelled and suspended.
  * 
  * @author Jens Halm
  */
 public interface SuspendableCommand extends CancellableCommand {
 	
+	/**
+	 * Indicates whether this command is currently suspended.
+	 */
 	function get suspended () : Boolean;
     
+    /**
+     * Suspends the command. 
+     * Calling this method only has an effect if the command is currently executing.
+     */
     function suspend () : void;
     
+    /**
+     * Resumes the command. 
+     * Calling this method only has an effect if the command is currently suspended.
+     */
     function resume () : void;
 	
 }

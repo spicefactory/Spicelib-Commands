@@ -28,7 +28,7 @@ import org.spicefactory.lib.logging.Logger;
  * When the last child command has completed its operation this sequence will fire its
  * <code>COMPLETE</code> event. If the sequence gets cancelled or suspended the currently active child
  * command will also be cancelled or suspended in turn.
- * If a child command throws an <code>ERROR</code> event and the <code>ignoreChildErrors</code> property
+ * If a child command throws an <code>ERROR</code> event and the <code>skipErrors</code> property
  * of this sequence is set to false, then the sequence will fire an <code>ERROR</code> event
  * and will not execute its remaining child commands.
  * 
@@ -47,6 +47,11 @@ public class CommandSequence extends AbstractCommandExecutor implements CommandG
 	/**
 	 * Creates a new sequence.
 	 * 
+	 * @param description a description of this command sequence
+	 * @param skipErrors if true an error in a command executed by this instance leads to commandComplete getting called,
+	 * if false the executor will stop with an error result 
+	 * @param skipCancelllations if true the cancelleation of a command executed by this instance leads 
+	 * to commandComplete getting called, if false the executor will stop with an error result 
 	 */	
 	function CommandSequence (description:String = null, 
 			skipErrors:Boolean = false, skipCancelllations:Boolean = false) {

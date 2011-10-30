@@ -21,6 +21,12 @@ import org.spicefactory.lib.command.CommandExecutor;
 import flash.events.ErrorEvent;
 	
 /**
+ * Represents a failure of a command executor.
+ * This class does not extend Error or ErrorEvent. It is the type of cause 
+ * an comand executor like a group or flow would pass to the error callbacks.
+ * It allows to inspect the cause of the error as well as the executor and
+ * the target command that caused the error.
+ * 
  * @author Jens Halm
  */
 public class CommandExecutorFailure {
@@ -33,24 +39,45 @@ public class CommandExecutorFailure {
 	private var _cause:Object;
 	
 
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param executor the instance that executed the target command that caused the error
+	 * @param target the target command that caused the error
+	 * @param cause the cause of the error
+	 */
 	function CommandExecutorFailure (executor:CommandExecutor, target:Object, cause:Object) {
 		_executor = executor;
 		_target = target;
 		_cause = cause;
 	}
 	
+	/**
+	 * The instance that executed the target command that caused the error.
+	 */
 	public function get executor () : CommandExecutor {
 		return _executor;
 	}
 	
+	/**
+	 * The target command that caused the error.
+	 */
 	public function get target () : Object {
 		return _target;
 	}
 	
+	/**
+	 * The cause of the error.
+	 * Usually an instance of <code>Error</code>, <code>ErrorEvent</code>
+	 * or <code>CommandTimeout</code>, but may be any type like a simple String.
+	 */
 	public function get cause () : Object {
 		return _cause;
 	}
 	
+	/**
+	 * A textual representation of the failure.
+	 */
 	public function get message () : String {
 		var msg:String = "Execution of " + executor + " failed.";
 		if (!(cause is CommandExecutorFailure)) {

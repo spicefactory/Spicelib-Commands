@@ -32,9 +32,11 @@ import org.spicefactory.lib.logging.Logger;
 import flash.system.ApplicationDomain;
 
 /**
- * Abstract base class for CommandGroup implementations.
- * Manages multiple child commands and is itself a command (Composite Design Pattern)
- * so that it can be nested within other groups or flows.
+ * Abstract base class for all executor implementations.
+ * It knows how to execute other commands and deal with their events.
+ * Subclasses are expected to call the protected <code>executeCommand</code>
+ * method to start a command and override the protected template method
+ * <code>commandComplete</code> for dealing with the result.
  * 
  * @author Jens Halm
  */
@@ -57,7 +59,13 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	
 	
 	/**
+	 * Creates a new instance.
 	 * 
+	 * @param description a description of this command
+	 * @param processErrors if true an error in a command executed by this instance leads to commandComplete getting called,
+	 * if false the executor will stop with an error result 
+	 * @param processCancellations if true the cancelleation of a command executed by this instance leads 
+	 * to commandComplete getting called, if false the executor will stop with an error result 
 	 */
 	function AbstractCommandExecutor (description:String = null, 
 			processErrors:Boolean = false, processCancellations:Boolean = false) {
@@ -86,6 +94,12 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		return true;
 	}
 	
+	/**
+	 * Adds a value to this executor that can get passed to any command
+	 * executed by this instance.
+	 * 
+	 * @param value the value to add to this executor
+	 */
 	public function addData (value:Object) : void {
 		if (_data) {
 			_data.addValue(value);
@@ -95,6 +109,10 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		}
 	}
 	
+	/**
+	 * The domain to use in case reflection on the command classes
+	 * this exeutor deals with is required.
+	 */
 	public function get domain (): ApplicationDomain {
 		return _domain;
 	}
@@ -112,6 +130,9 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		addValues();
 	}
 	
+	/**
+	 * The lifecycle hook to use for the commands executed by this instance.
+	 */
 	protected function get lifecycle () : CommandLifecycle {
 		if (!_lifecycle) {
 			_lifecycle = createLifecycle();
@@ -119,6 +140,17 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		return _lifecycle;
 	}
 	
+	/**
+	 * Creates a new instance of the lifecycle hook.
+	 * Subclasses may override this method to provide specialized implementations.
+	 * This method will only get invoked when the first command executed by this 
+	 * instance gets started without the <code>prepare</code> method being invoked
+	 * upfront. The <code>prepare</code> method allows to pass down <code>CommandLifecycle</code>
+	 * instances from the environment (like parent executors), in which case this instance
+	 * should not create its own lifecycle.
+	 * 
+	 * @return a new lifecycle instance to use when executing commands
+	 */
 	protected function createLifecycle () : CommandLifecycle {
 		return new DefaultCommandLifecycle(domain);
 	}
@@ -146,12 +178,26 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		values = [];
     }
     
+    /**
+	 * Creates a new instance holding the data commands executed by this instance will produce.
+	 * Subclasses may override this method to provide specialized implementations.
+	 * This method will only get invoked when the first command executed by this 
+	 * instance gets started without the <code>prepare</code> method being invoked
+	 * upfront. The <code>prepare</code> method allows to pass down <code>CommandData</code>
+	 * instances from the environment (like parent executors), in which case this instance
+	 * should not use its own implementations.
+	 * 
+	 * @return a new instance to use for holding the data commands executed by this instance will produce
+	 */
     protected function createData () : CommandData {
     	return new DefaultCommandData();
     }
     
 	/**
 	 * Executes the specified command.
+	 * Upon completion the <code>commandComplete</code> method will get invoked
+	 * which may be overridden by subclasses to deal with the result or decide
+	 * on the next command to execute.
 	 * 
 	 * @param com the command to execute
 	 */
@@ -218,13 +264,12 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	}
 	
 	/**
-	 * Invoked when a child command has completed its operation.
-	 * This includes cancellations or (in case the <code>ignoreChildErrors</code>
-	 * property is set to true) also children that failed to complete successfully.
-	 * In case of cancellations or errors the result property is null.
+	 * Invoked when a child command has completed its operation successfully.
+	 * It may also get invoked when a child command has been cancelled 
+	 * (in case <code>processCancellations</code> is set to true) and commands
+	 * that failed (in case the <code>processErrors</code> is set to true).
 	 * 
-	 * @param com the command that has completed its operation
-	 * @param result the result of the command in case of successful completion
+	 * @param result the result of the command
 	 */
 	protected function commandComplete (result:CommandResult) : void {
 		/* default implementation does nothing */ 

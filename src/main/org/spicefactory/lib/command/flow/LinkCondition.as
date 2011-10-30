@@ -18,10 +18,20 @@ package org.spicefactory.lib.command.flow {
 import org.spicefactory.lib.command.CommandResult;
 	
 /**
+ * Represents a condition of a CommandLink.
+ * 
  * @author Jens Halm
  */
 public interface LinkCondition {
-	
+
+	/**
+	 * Determines whether the condition this instance represents
+	 * is met based on the specified result of the preceding command
+	 * in the flow.
+	 * 
+	 * @param result the result of the preceding command in the flow
+	 * @return true if the condition is met and the associated link action should be performed
+	 */	
 	function matches (result:CommandResult) : Boolean;
 	
 }

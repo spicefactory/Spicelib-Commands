@@ -17,6 +17,8 @@
 package org.spicefactory.lib.command.events {
 	
 /**
+ * Represents a timeout that occurred in a command.
+ * 
  * @author Jens Halm
  */
 public class CommandTimeout {
@@ -24,10 +26,18 @@ public class CommandTimeout {
 	
 	private var _timeout:uint;
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param timeout the timeout in milliseconds
+	 */
 	function CommandTimeout (timeout:uint) {
 		_timeout = timeout;
 	}
 	
+	/**
+	 * The timeout in milliseconds.
+	 */
 	public function get timeout () : uint {
 		return _timeout;
 	}

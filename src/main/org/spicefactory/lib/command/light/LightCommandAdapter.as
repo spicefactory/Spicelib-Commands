@@ -35,6 +35,14 @@ import flash.events.ErrorEvent;
 
 	
 /**
+ * A CommandAdapter that for commands that adhere to the conventions of Spicelib's "Light Commands".
+ * 
+ * <p>Such a light command does not implement any of the Command interfaces. It has a required method
+ * called <code>execute</code> that may expect data to be passed to it through its method parameters.
+ * It supports an optional no-arg <code>cancel</code> method. For asynchronous operation it supports
+ * a callback function that is either passed to the execute method or injected into a public property
+ * called <code>callback</code>.</p>
+ * 
  * @author Jens Halm
  */
 public class LightCommandAdapter extends AbstractSuspendableCommand implements CommandAdapter {
@@ -53,11 +61,25 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	
 	private static const errorTypes:Array = [Error, ErrorEvent];
 	
+	/**
+	 * Adds a type of result that should be interpreted as an Error.
+	 * 
+	 * @param the type of result that should be interpreted as an Error
+	 */
 	public static function addErrorType (type:Class) : void {
 		errorTypes.push(type);
 	}
  	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param target the target command instance
+	 * @param executeMethod the method to invoke when the command gets executed
+	 * @param callback the optional callback property to inject a callback function into
+	 * @param cancelMethod the optional cancel method to invoke whent the command gets cancelled
+	 * @param async flag indicating whether this command executes asynchronously
+	 */
 	function LightCommandAdapter (target:Object, executeMethod:Method, 
 			callback:Property, cancelMethod:Method, async:Boolean) {
 		_target = target;
@@ -69,14 +91,23 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	}
 
 
+	/**
+	 * @inheritDoc
+	 */
 	public function get target () : Object {
 		return _target;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function get cancellable () : Boolean {
 		return (cancelMethod != null);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function get suspendable () : Boolean {
 		return false;
 	}
@@ -89,6 +120,9 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		_data = new DefaultCommandData(data);
 	}
 	
+	/**
+	 * The lifecycle hook to use for the commands executed by this instance.
+	 */
 	protected function get lifecycle () : CommandLifecycle {
 		if (!_lifecycle) {
 			_lifecycle = new DefaultCommandLifecycle();
@@ -108,6 +142,9 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
     	return _data;
     }
 	
+	/**
+	 * @private
+	 */
 	protected override function doExecute () : void {
 		lifecycle.beforeExecution(target, data);
 		if (callbackProperty) {

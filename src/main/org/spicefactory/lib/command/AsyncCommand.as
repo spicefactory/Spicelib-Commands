@@ -18,17 +18,26 @@ package org.spicefactory.lib.command {
 
 import flash.events.IEventDispatcher;
 
+/**
+ * Dispatched when the command execution completed successfully.
+ */
 [Event(name="complete", type="org.spicefactory.lib.command.events.CommandResultEvent")]
 
+/**
+ * Dispatched when the command execution failed.
+ */
 [Event(name="error", type="org.spicefactory.lib.command.events.CommandResultEvent")]
 
 /**
- * 
+ * Represents a command that executes asynchronously.
  * 
  * @author Jens Halm
  */
 public interface AsyncCommand extends Command, IEventDispatcher {
 	
+	/**
+	 * Indicates whether this command is currently executing.
+	 */
 	function get active () : Boolean;
 	
 }

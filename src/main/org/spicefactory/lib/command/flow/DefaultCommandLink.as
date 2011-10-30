@@ -19,6 +19,10 @@ package org.spicefactory.lib.command.flow {
 import org.spicefactory.lib.command.CommandResult;
 	
 /**
+ * The default implementation of the CommandLink interface
+ * that consists of a LinkCondition and a LinkAction to perform
+ * when the condition is met.
+ * 
  * @author Jens Halm
  */
 public class DefaultCommandLink implements CommandLink {
@@ -28,12 +32,21 @@ public class DefaultCommandLink implements CommandLink {
 	private var action:LinkAction;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param condition the condition that must be met for this link to perform its action
+	 * @param action the action to perform when the condition is met
+	 */
 	public function DefaultCommandLink (condition:LinkCondition, action:LinkAction) {
 		this.condition = condition;
 		this.action = action;
 	}
 	
 
+	/**
+	 * @inheritDoc
+	 */
 	public function link (result:CommandResult, processor:CommandLinkProcessor) : void {
 		if (condition.matches(result)) {
 			action.execute(processor);

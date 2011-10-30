@@ -19,13 +19,32 @@ package org.spicefactory.lib.command.builder {
 import org.spicefactory.lib.command.proxy.CommandProxy;
 	
 /**
+ * Represents a builder that produces command proxies.
+ * Most classes of the builder API implement this interfaces.
+ * 
  * @author Jens Halm
  */
 public interface CommandBuilder {
 	
 	
+	/**
+	 * Builds and executes the target command.
+	 * A shortcut for calling <code>build().execute()</code>.
+	 * In case of asynchronous commands the returned proxy
+	 * will still be active. In case of synchronous commands
+	 * it will already be completed, so that adding event
+	 * listeners won't have any effect.
+	 * 
+	 * @return the command that was built and executed by this builder
+	 */
 	function execute () : CommandProxy;
 	
+	/**
+	 * Builds the target command, applying all configurations specified
+	 * through this builder instance.
+	 * 
+	 * @return the command proxy will all configuration of this builder applied
+	 */
 	function build () : CommandProxy;
 	
 	

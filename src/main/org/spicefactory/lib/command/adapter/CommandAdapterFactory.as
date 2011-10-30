@@ -20,11 +20,21 @@ import flash.system.ApplicationDomain;
 
 	
 /**
+ * Represents a factory for command adapters.
+ * 
  * @author Jens Halm
  */
 public interface CommandAdapterFactory {
 	
 	
+	/**
+	 * Creates a new adapter for the specified target command.
+	 * 
+	 * @param instance the target command that usually does not implement one of the Command interfaces
+	 * @param domain the ApplicationDomain to use for reflection
+	 * @return a new adapter for the specified target command or null if the specified instance cannot
+	 * be handled by this factory
+	 */
 	function createAdapter (instance:Object, domain:ApplicationDomain = null) : CommandAdapter;
 
 	

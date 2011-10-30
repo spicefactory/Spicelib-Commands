@@ -20,6 +20,9 @@ import org.spicefactory.lib.command.flow.CommandLink;
 import org.spicefactory.lib.command.flow.CommandLinks;
 	
 /**
+ * Builder for specifying the default action for a flow
+ * when a command result does not have any matching links.
+ * 
  * @author Jens Halm
  */
 public class DefaultLinkBuilder {
@@ -29,21 +32,43 @@ public class DefaultLinkBuilder {
 	internal var link: CommandLink;
 	
 	
+	/**
+	 * @private
+	 */
 	function DefaultLinkBuilder (flowBuilder: CommandFlowBuilder) {
 		this.flowBuilder = flowBuilder;
 	}
 	
 	
+	/**
+	 * Sets an error with the specified value as the default 
+	 * action when a command result does not have any matching links.
+	 * 
+	 * @value the value of the error
+	 * @return the flow builder for further configuration
+	 */
 	public function toFlowError (value: Object): CommandFlowBuilder {
 		link = CommandLinks.toFlowError(value);
 		return flowBuilder;
 	}
 	
+	/**
+	 * Sets flow cancellation as the default 
+	 * action when a command result does not have any matching links.
+	 * 
+	 * @return the flow builder for further configuration
+	 */
 	public function toFlowCancellation (): CommandFlowBuilder {
 		link = CommandLinks.toFlowCancellation();
 		return flowBuilder;
 	}
 	
+	/**
+	 * Sets successful flow completion as the default 
+	 * action when a command result does not have any matching links.
+	 * 
+	 * @return the flow builder for further configuration
+	 */
 	public function toFlowEnd (): CommandFlowBuilder {
 		link = CommandLinks.toFlowEnd();
 		return flowBuilder;

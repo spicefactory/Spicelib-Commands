@@ -18,19 +18,37 @@ package org.spicefactory.lib.command.flow {
 import org.spicefactory.lib.errors.IllegalArgumentError;
 	
 /**
+ * Helper class to create basic link actions.
+ * 
  * @author Jens Halm
  */
 public class CommandLinks {
 	
 	
+	/**
+	 * Creates a link that causes successful flow completion.
+	 * 
+	 * @return a link that causes successful flow completion
+	 */
 	public static function toFlowEnd () : CommandLink {
 		return new FlowEndLink();
 	}
 	
+	/**
+	 * Creates a link that causes the flow to abort with the specified error.
+	 * 
+	 * @param value the cause of the error
+	 * @return a link that causes the flow to abort with the specified error
+	 */
 	public static function toFlowError (value:Object) : CommandLink {
 		return new FlowErrorLink(value);
 	}
 	
+	/**
+	 * Creates a link that causes flow cancellation.
+	 * 
+	 * @return a link that causes flow cancellation
+	 */
 	public static function toFlowCancellation () : CommandLink {
 		return new FlowCancellationLink();
 	}
@@ -38,11 +56,16 @@ public class CommandLinks {
 	
 	private static var _defaultLink:CommandLink;
 	
+	
 	public static function set defaultLink (value:CommandLink) : void {
 		if (!value) throw IllegalArgumentError("defaultLink must not be null");
 		_defaultLink = value;
 	}
 	
+	/**
+	 * Specifies the default link to use when a CommandFlow
+	 * does not have an explicit default link.
+	 */
 	public static function  get defaultLink () : CommandLink {
 		if (!_defaultLink) {
 			_defaultLink = new DefaultLink();
@@ -55,12 +78,12 @@ public class CommandLinks {
 }
 
 
-import org.spicefactory.lib.logging.LogContext;
-import org.spicefactory.lib.logging.Logger;
 import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.flow.CommandLink;
-import org.spicefactory.lib.command.flow.CommandLinks;
 import org.spicefactory.lib.command.flow.CommandLinkProcessor;
+import org.spicefactory.lib.command.flow.CommandLinks;
+import org.spicefactory.lib.logging.LogContext;
+import org.spicefactory.lib.logging.Logger;
 
 class FlowEndLink implements CommandLink {
 

@@ -22,6 +22,9 @@ import org.spicefactory.lib.command.base.AbstractCancellableCommand;
 import flash.utils.Timer;
 
 /**
+ * A simple Command implementation that waits for a specified amount of
+ * time before signalling its completion.
+ * 
  * @author Jens Halm
  */
 public class DelayCommand extends AbstractCancellableCommand {
@@ -31,12 +34,20 @@ public class DelayCommand extends AbstractCancellableCommand {
 	private var timer:Timer;
 
 
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param delay the amount of time to wait in milliseconds
+	 */
 	function DelayCommand (delay:uint) {
 		super("[DelayCommand(" + delay + " ms)]");
 		this.delay = delay;
 	}
 	
 	
+	/**
+	 * @private
+	 */
 	protected override function doExecute () : void {
 		timer = new Timer(delay, 1);
 		timer.addEventListener(TimerEvent.TIMER, timerComplete);
@@ -48,6 +59,9 @@ public class DelayCommand extends AbstractCancellableCommand {
 		complete();
 	}
 	
+	/**
+	 * @private
+	 */
 	protected override function doCancel () : void {
 		timer.reset();
 		timer = null;

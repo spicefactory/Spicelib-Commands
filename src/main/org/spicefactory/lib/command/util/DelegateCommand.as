@@ -19,6 +19,9 @@ package org.spicefactory.lib.command.util {
 import org.spicefactory.lib.command.Command;
 
 /**
+ * A simple Command implementation that delegates to a function
+ * when executed.
+ * 
  * @author Jens Halm
  */
 public class DelegateCommand implements Command {
@@ -26,11 +29,21 @@ public class DelegateCommand implements Command {
 	private var delegate:Function;
 	private var params:Array;
 
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param delegate the function to invoke when this command executes
+	 * @param params parameters to pass to the function
+	 */
 	function DelegateCommand (delegate:Function, params:Array) {
 		this.delegate = delegate;
 		this.params = params;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function execute () : void {
 		delegate.apply(null, params);
 	}

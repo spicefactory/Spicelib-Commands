@@ -45,7 +45,9 @@ public class AbstractAsyncCommand extends EventDispatcher implements AsyncComman
 	
 	
 	/**
+	 * Creates a new instance.
 	 * 
+	 * @param description a description of this command
 	 */
 	public function AbstractAsyncCommand (description:String = null) {
 		this.description = description || "[AsyncCommand]";

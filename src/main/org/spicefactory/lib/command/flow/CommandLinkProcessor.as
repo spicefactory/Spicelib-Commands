@@ -18,17 +18,36 @@ package org.spicefactory.lib.command.flow {
 import org.spicefactory.lib.command.Command;
 	
 /**
+ * Allows a CommandLink to specify the next action to perform 
+ * by a CommandFlow.
+ * 
  * @author Jens Halm
  */
 public interface CommandLinkProcessor {
 	
 	
+	/**
+	 * Executes the specified command in the flow.
+	 * 
+	 * @param command the command to execute
+	 */
 	function execute (command:Command) : void;
 	
+	/**
+	 * Causes the flow to signal successfull completion.
+	 */
 	function complete () : void;
 	
+	/**
+	 * Causes the flow to get cancelled.
+	 */
 	function cancel () : void;
 	
+	/**
+	 * Causes the flow to abort with the specified error.
+	 * 
+	 * @param cause the error the flow should abort with
+	 */
 	function error (cause:Object) : void;
 	
 	

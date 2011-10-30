@@ -17,15 +17,28 @@
 package org.spicefactory.lib.command {
 	
 /**
+ * Represents the result of a command execution.
+ * 
  * @author Jens Halm
  */
 public interface CommandResult {
 	
 	
+	/**
+	 * The command that produced the result.
+	 */
 	function get command () : Object;
 	
+	/**
+	 * The actual result value.
+	 */
 	function get value () : Object;
 	
+	/**
+	 * Whether the command completed successfully.
+	 * If this flag is false, the value property represents
+	 * the error thrown or dispatched by the command.
+	 */
 	function get complete () : Boolean;
 	
 	

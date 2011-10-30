@@ -16,15 +16,21 @@
 
 package org.spicefactory.lib.command {
 
+/**
+ * Dispatched when the command gets cancelled.
+ */
 [Event(name="cancel", type="org.spicefactory.lib.command.events.CommandEvent")]
 
 /**
- * 
+ * Represents a command that can get cancelled.
  * 
  * @author Jens Halm
  */
 public interface CancellableCommand extends AsyncCommand {
 	
+	/**
+	 * Cancels the command.
+	 */
 	function cancel () : void;
 	
 }

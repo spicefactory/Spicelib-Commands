@@ -22,6 +22,13 @@ import org.spicefactory.lib.logging.LogContext;
 import org.spicefactory.lib.logging.Logger;
 	
 /**
+ * Abstract base implementation of the CancellableCommand interface. 
+ * 
+ * <p>A subclass of AbstractCancellableCommand is expected
+ * to override the <code>doStart</code>, <code>doCancel</code>, <code>doSuspend</code> and <code>doResume</code>
+ * methods and perform the necessary operations, and then call <code>complete</code>
+ * when the operation is done (or <code>error</code> when the command fails to complete successfully).
+ * 
  * @author Jens Halm
  */
 public class AbstractSuspendableCommand extends AbstractCancellableCommand implements SuspendableCommand {
@@ -36,7 +43,7 @@ public class AbstractSuspendableCommand extends AbstractCancellableCommand imple
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param description a description of this command for logging purposes
+	 * @param description a description of this command
 	 */
 	public function AbstractSuspendableCommand (description:String = null) {
 		super(description);
@@ -51,12 +58,15 @@ public class AbstractSuspendableCommand extends AbstractCancellableCommand imple
 	}
 	
 	/**
-	 * Suspends this command. If the command is not currently active,
-	 * invoking this method has no effect.
+	 * @inheritDoc
 	 */
 	public function suspend () : void {
 		if (!active) {
 			logger.error("Attempt to suspend inactive command '{0}'", this);
+			return;
+		}
+		if (suspended) {
+			logger.error("Attempt to suspend command '{0}' which is already suspended", this);
 			return;
 		}
 		_suspended = true;
@@ -65,8 +75,7 @@ public class AbstractSuspendableCommand extends AbstractCancellableCommand imple
 	}
 	
 	/**
-	 * Resumes this command. If the command is not currently suspended,
-	 * invoking this method has no effect.
+	 * @inheritDoc
 	 */
 	public function resume () : void {
 		if (!suspended) {

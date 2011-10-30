@@ -21,6 +21,8 @@ import org.spicefactory.lib.command.flow.CommandLink;
 import org.spicefactory.lib.command.flow.LinkCondition;
 	
 /**
+ * Builder for specifying link conditions in a command flow.
+ * 
  * @author Jens Halm
  */
 public class CommandLinkBuilder {
@@ -37,6 +39,9 @@ public class CommandLinkBuilder {
 	internal var links:Array = new Array();
 	
 	
+	/**
+	 * @private
+	 */
 	public function CommandLinkBuilder (target:Object) {
 		this.target = target;
 	}
@@ -48,26 +53,66 @@ public class CommandLinkBuilder {
 		return builder;
 	}
 	
+	/**
+	 * Creates a link that only executes if the result produced by the 
+	 * command in the flow is of the specified type.
+	 * 
+	 * @param type the type of result the command must produce for this link to have an effect
+	 * @return a builder to specify the action to perform when the link condition is met
+	 */
 	public function linkResultType (type:Class) : LinkTargetBuilder {
 		return newTargetBuilder(LinkConditions.forResultType(type));
 	}
 	
+	/**
+	 * Creates a link that only executes if the result produced by the 
+	 * command in the flow equals the specified value.
+	 * 
+	 * @param value the result the command must produce for this link to have an effect
+	 * @return a builder to specify the action to perform when the link condition is met
+	 */
 	public function linkResultValue (value:Object) : LinkTargetBuilder {
 		return newTargetBuilder(LinkConditions.forResultValue(value));
 	}
 	
+	/**
+	 * Creates a link that only executes if the result produced by the 
+	 * command in the flow has the specified property value.
+	 * 
+	 * @param name the name of the property
+	 * @param value the value the property must have for this link to have an effect
+	 * @return a builder to specify the action to perform when the link condition is met
+	 */
 	public function linkResultProperty (name:String, value:Object) : LinkTargetBuilder {
 		return newTargetBuilder(LinkConditions.forResultProperty(name, value));
 	}
 	
+	/**
+	 * Creates a link that executes for all types of results produced by the 
+	 * command in the flow.
+	 * 
+	 * @return a builder to specify the action to perform
+	 */
 	public function linkAllResults () : LinkTargetBuilder {
-		return newTargetBuilder(LinkConditions.forDefault());
+		return newTargetBuilder(LinkConditions.forAllResults());
 	}
 	
+	/**
+	 * Specifies a link function to invoke after the command finished executing.
+	 * The signature of the funciton must be 
+	 * <code>(result: CommandResult, processor: CommandLinkProcessor): void</code>.
+	 * 
+	 * @param link a link function to invoke after the command finished executing
+	 */
 	public function linkFunction (link:Function) : void {
 		links.push(new LinkFunction(link));
 	}
 	
+	/**
+	 * Specifies a custom link to invoke after the command finished executing.
+	 * 
+	 * @param link a link to invoke after the command finished executing
+	 */
 	public function link (link:CommandLink) : void {
 		links.push(link);
 	}
