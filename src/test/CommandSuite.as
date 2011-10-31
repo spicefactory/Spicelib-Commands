@@ -10,11 +10,11 @@ import org.spicefactory.lib.command.LightCommandTest;
 [RunWith("org.flexunit.runners.Suite")]
 public class CommandSuite {
 
-//	public var execution:CommandExecutionTest;
-//	public var groups:CommandGroupTest;
+	public var execution:CommandExecutionTest;
+	public var groups:CommandGroupTest;
 	public var flows:CommandFlowTest;
-//	public var data:CommandDataTest;
-//	public var light:LightCommandTest;
+	public var data:CommandDataTest;
+	public var light:LightCommandTest;
 	
 }
 }

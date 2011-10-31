@@ -15,7 +15,6 @@
  */
 package org.spicefactory.lib.command {
 
-import org.hamcrest.mxml.object.NotNull;
 import org.flexunit.assertThat;
 import org.hamcrest.collection.arrayWithSize;
 import org.hamcrest.core.isA;

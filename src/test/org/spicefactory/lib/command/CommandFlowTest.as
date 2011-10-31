@@ -18,8 +18,6 @@ package org.spicefactory.lib.command {
 import org.flexunit.assertThat;
 import org.flexunit.async.Async;
 import org.hamcrest.core.isA;
-import org.hamcrest.object.equalTo;
-import org.hamcrest.object.isFalse;
 import org.hamcrest.object.isTrue;
 import org.hamcrest.object.sameInstance;
 import org.spicefactory.lib.command.builder.CommandFlowBuilder;
@@ -362,12 +360,6 @@ public class CommandFlowTest {
 		return builder;
 	}
 	
-	private function assertInactive (): void {
-		assertThat(proxy.active, isFalse());
-		events.assertEvents(0);
-		events.assertCallbacks(0);
-	}
-	
 	private function assertActive (): void {
 		assertThat(proxy.active, isTrue());
 		events.assertEvents(0);
@@ -377,11 +369,6 @@ public class CommandFlowTest {
 	private function assertCompleted (): void {
 		events.assertEvents(1);
 		events.assertCallbacks(1);
-	}
-	
-	private function assertResult (value: Object): void {
-		assertCompleted();
-		assertThat(events.getResult(), equalTo(value));
 	}
 	
 	private function assertError (expectedCause: Class): void {

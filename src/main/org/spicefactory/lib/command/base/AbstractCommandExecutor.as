@@ -218,6 +218,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 		
 		try {
 			lifecycle.beforeExecution(com, data);
+			if (logger.isDebugEnabled()) logger.debug("Executing command {0}", com);
 			com.execute();
 		}
 		catch (e:Error) {
