@@ -20,7 +20,7 @@
 	<target name="clean">
 		<delete dir="${release.target.dir}"/>
 		<mkdir dir="${release.target.dir}"/>
-		<mkdir dir="${release.target.dir}/libs"/>
+		<mkdir dir="${release.target.dir}/dependencies"/>
 	</target>
 	
 	<target name="compile">
@@ -40,8 +40,8 @@
 		<copy todir="${release.target.dir}">
 			<fileset dir="${project.dir}" includes="license.txt"/>
 		</copy>
-		<copy todir="${release.target.dir}/libs">
-			<fileset dir="${project.dir}/libs" includes="*.swc"/>
+		<copy todir="${release.target.dir}/dependencies">
+			<fileset dir="${project.dir}/libs" includes="spicelib-*.swc"/>
 		</copy>
 	</target>
 	
