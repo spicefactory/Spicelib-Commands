@@ -179,7 +179,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		for each (var param:Parameter in executeMethod.parameters) {
 			if (param.type.getClass() == Function) {
 				params.push(callback);
-				break;
+				continue;
 			}
 			var value:Object = data.getObject(param.type.getClass());
 			if (value) {
@@ -190,7 +190,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 						+ param.type.name);
 			}
 			else {
-				params.push(undefined);
+				break;
 			}
 		}
 		return params;
