@@ -29,7 +29,7 @@ import flash.events.ErrorEvent;
  * 
  * @author Jens Halm
  */
-public class CommandExecutorFailure {
+public class CommandFailure {
 	
 	
 	private var _executor:CommandExecutor;
@@ -46,7 +46,7 @@ public class CommandExecutorFailure {
 	 * @param target the target command that caused the error
 	 * @param cause the cause of the error
 	 */
-	function CommandExecutorFailure (executor:CommandExecutor, target:Object, cause:Object) {
+	function CommandFailure (executor:CommandExecutor, target:Object, cause:Object) {
 		_executor = executor;
 		_target = target;
 		_cause = cause;
@@ -80,7 +80,7 @@ public class CommandExecutorFailure {
 	 */
 	public function get message () : String {
 		var msg:String = "Execution of " + executor + " failed.";
-		if (!(cause is CommandExecutorFailure)) {
+		if (!(cause is CommandFailure)) {
 			msg += "\nCause: Target command " + target + " failed.";
 		}
 		msg +=	"\nCause: ";

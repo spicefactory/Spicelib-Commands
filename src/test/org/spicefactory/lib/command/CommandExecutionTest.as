@@ -26,7 +26,7 @@ import org.hamcrest.object.isTrue;
 import org.hamcrest.object.sameInstance;
 import org.spicefactory.lib.command.builder.CommandProxyBuilder;
 import org.spicefactory.lib.command.builder.Commands;
-import org.spicefactory.lib.command.events.CommandExecutorFailure;
+import org.spicefactory.lib.command.events.CommandFailure;
 import org.spicefactory.lib.command.impl.AsynchronousCommand;
 import org.spicefactory.lib.command.impl.FullCommand;
 import org.spicefactory.lib.command.impl.SynchronousCommand;
@@ -218,8 +218,8 @@ public class CommandExecutionTest {
 		var errorHandler:Function = function (error: Object, data: Object = null): void {
 			proxyEvents.assertEvents(0, 1);
 			proxyEvents.assertCallbacks(0, 1);
-			assertThat(proxyEvents.getError(), isA(CommandExecutorFailure));
-			var failure:CommandExecutorFailure = CommandExecutorFailure(proxyEvents.getErrorFromCallback());
+			assertThat(proxyEvents.getError(), isA(CommandFailure));
+			var failure:CommandFailure = CommandFailure(proxyEvents.getErrorFromCallback());
 			assertThat(failure.cause, isA(CommandTimeout));
 			assertThat(failure.executor, sameInstance(proxy));
 			assertThat(failure.target, isA(AsynchronousCommand));
@@ -243,8 +243,8 @@ public class CommandExecutionTest {
 		
 		proxyEvents.assertEvents(0); // due to timing we don't get the event for a synchronous command here
 		proxyEvents.assertCallbacks(0, 1);
-		assertThat(proxyEvents.getErrorFromCallback(), isA(CommandExecutorFailure));
-		var failure:CommandExecutorFailure = CommandExecutorFailure(proxyEvents.getErrorFromCallback());
+		assertThat(proxyEvents.getErrorFromCallback(), isA(CommandFailure));
+		var failure:CommandFailure = CommandFailure(proxyEvents.getErrorFromCallback());
 		assertThat(failure.cause, isA(Error));
 		assertThat(failure.executor, sameInstance(proxy));
 		assertThat(failure.target, sameInstance(sync));
@@ -264,8 +264,8 @@ public class CommandExecutionTest {
 		proxyEvents.assertEvents(0, 1);
 		proxyEvents.assertCallbacks(0, 1);
 		
-		assertThat(proxyEvents.getError(), isA(CommandExecutorFailure));
-		var failure:CommandExecutorFailure = CommandExecutorFailure(proxyEvents.getErrorFromCallback());
+		assertThat(proxyEvents.getError(), isA(CommandFailure));
+		var failure:CommandFailure = CommandFailure(proxyEvents.getErrorFromCallback());
 		assertThat(failure.cause, isA(Date));
 		assertThat(failure.executor, sameInstance(proxy));
 		assertThat(failure.target, sameInstance(async));

@@ -24,7 +24,7 @@ import org.hamcrest.object.equalTo;
 import org.hamcrest.object.sameInstance;
 import org.spicefactory.lib.command.builder.CommandGroupBuilder;
 import org.spicefactory.lib.command.builder.Commands;
-import org.spicefactory.lib.command.events.CommandExecutorFailure;
+import org.spicefactory.lib.command.events.CommandFailure;
 import org.spicefactory.lib.command.events.CommandResultEvent;
 import org.spicefactory.lib.command.events.CommandTimeout;
 import org.spicefactory.lib.command.impl.AsynchronousCommand;
@@ -344,8 +344,8 @@ public class CommandGroupTest {
 		var errorHandler:Function = function (error: Object, data: Object = null): void {
 			events.assertEvents(0, 1);
 			events.assertCallbacks(0, 1);
-			assertThat(events.getError(), isA(CommandExecutorFailure));
-			var failure:CommandExecutorFailure = CommandExecutorFailure(events.getErrorFromCallback());
+			assertThat(events.getError(), isA(CommandFailure));
+			var failure:CommandFailure = CommandFailure(events.getErrorFromCallback());
 			assertThat(failure.cause, isA(CommandTimeout));
 			assertThat(failure.executor, sameInstance(proxy));
 			assertThat(failure.target, isA(CommandGroup));

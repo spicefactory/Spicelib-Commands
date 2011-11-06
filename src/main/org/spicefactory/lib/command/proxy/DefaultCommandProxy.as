@@ -22,7 +22,7 @@ import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.base.AbstractCancellableCommand;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
 import org.spicefactory.lib.command.events.CommandEvent;
-import org.spicefactory.lib.command.events.CommandExecutorFailure;
+import org.spicefactory.lib.command.events.CommandFailure;
 import org.spicefactory.lib.command.events.CommandResultEvent;
 import org.spicefactory.lib.command.events.CommandTimeout;
 import org.spicefactory.lib.errors.IllegalStateError;
@@ -124,7 +124,7 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 					: CommandAdapters.createAdapter(target);
 			}
 			catch (e:Error) {
-				error(new CommandExecutorFailure(this, _target, e));
+				error(new CommandFailure(this, _target, e));
 				return;
 			}
 		}
@@ -166,7 +166,7 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 	private function onTimeout (evt:TimerEvent) : void {
 		if (active) {
 			doCancel();
-			error(new CommandExecutorFailure(this, _target, new CommandTimeout(timeout)));
+			error(new CommandFailure(this, _target, new CommandTimeout(timeout)));
 		} else {
 			logger.error("Internal error: timeout in command '{0}' although it is not active", this);
 		}

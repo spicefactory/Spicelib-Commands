@@ -20,7 +20,7 @@ import org.spicefactory.lib.command.*;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.data.DefaultCommandData;
 import org.spicefactory.lib.command.events.CommandEvent;
-import org.spicefactory.lib.command.events.CommandExecutorFailure;
+import org.spicefactory.lib.command.events.CommandFailure;
 import org.spicefactory.lib.command.events.CommandResultEvent;
 import org.spicefactory.lib.command.lifecycle.CommandLifecycle;
 import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
@@ -287,7 +287,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 			commandComplete(DefaultCommandResult.forError(com, cause));
 		} else {
 			doCancel();
-			error(new CommandExecutorFailure(this, com, cause));
+			error(new CommandFailure(this, com, cause));
 		}
 	}
 	

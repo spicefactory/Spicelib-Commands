@@ -26,7 +26,7 @@ import org.hamcrest.object.nullValue;
 import org.hamcrest.object.sameInstance;
 import org.spicefactory.lib.command.builder.CommandProxyBuilder;
 import org.spicefactory.lib.command.builder.Commands;
-import org.spicefactory.lib.command.events.CommandExecutorFailure;
+import org.spicefactory.lib.command.events.CommandFailure;
 import org.spicefactory.lib.command.events.CommandResultEvent;
 import org.spicefactory.lib.command.events.CommandTimeout;
 import org.spicefactory.lib.command.impl.*;
@@ -268,8 +268,8 @@ public class LightCommandTest {
 	private function assertError (expectedCause: Class): void {
 		events.assertEvents(0, 1);
 		events.assertCallbacks(0, 1);
-		assertThat(events.getError(), isA(CommandExecutorFailure));
-		var failure:CommandExecutorFailure = CommandExecutorFailure(events.getError());
+		assertThat(events.getError(), isA(CommandFailure));
+		var failure:CommandFailure = CommandFailure(events.getError());
 		assertThat(failure.cause, isA(expectedCause));
 		assertThat(failure.executor, sameInstance(proxy));
 		assertThat(failure.target, sameInstance(proxy.target));
