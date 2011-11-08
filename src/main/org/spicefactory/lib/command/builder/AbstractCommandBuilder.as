@@ -169,6 +169,7 @@ public class AbstractCommandBuilder implements CommandBuilder {
 			return CommandBuilder(command).build();
 		}
 		else if (command is Class) {
+			initializeLightAdapter();
 			return Commands.create(command as Class).build();
 		}
 		else {
@@ -195,7 +196,7 @@ public class AbstractCommandBuilder implements CommandBuilder {
 	}
 	
 	
-	private static function initializeLightAdapter (): void {
+	protected static function initializeLightAdapter (): void {
 		if (!lightAdapterInitialized) {
 			lightAdapterInitialized = true;
 			CommandAdapters.addFactory(new LightCommandAdapterFactory());

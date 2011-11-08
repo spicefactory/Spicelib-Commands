@@ -128,6 +128,7 @@ public class CommandProxyBuilder extends AbstractCommandBuilder {
 	 */
 	public override function build () : CommandProxy {
 		if (target is Class) {
+			initializeLightAdapter();
 			setType(target as Class);
 		}
 		else {
