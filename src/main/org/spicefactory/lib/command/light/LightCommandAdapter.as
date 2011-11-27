@@ -156,21 +156,21 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 				executeMethod.invoke(target, params);
 			}
 			else {
-				var result:Object;
 				if (executeMethod.returnType.getClass() != Void) {
-					result = executeMethod.invoke(target, params);
+					var result:Object = executeMethod.invoke(target, params);
+					afterCompletion(DefaultCommandResult.forCompletion(target, result));
 					complete(result);
 				}
 				else {
 					executeMethod.invoke(target, params);
+					afterCompletion(DefaultCommandResult.forCompletion(target, null));
 					complete();
 				}
-				lifecycle.afterCompletion(target, DefaultCommandResult.forCompletion(target, result));
 			}
 		}
 		catch (e:Error) {
+			afterCompletion(DefaultCommandResult.forError(target, e));
 			error(e);
-			lifecycle.afterCompletion(target, DefaultCommandResult.forError(target, e));
 		}
 	}
 	
@@ -200,21 +200,23 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		if (!active) {
 			throw new IllegalStateError("Callback invoked although command " + target + " is not active");
 		}
-		var cr:CommandResult;
 		if (result === undefined) {
 			// do not call cancel to bypass doCancel
-			cr = DefaultCommandResult.forCancellation(target);
+			afterCompletion(DefaultCommandResult.forCancellation(target));
 			dispatchEvent(new CommandEvent(CommandEvent.CANCEL));	
 		}
 		else if (isError(result)) {
-			cr = DefaultCommandResult.forError(target, result);
+			afterCompletion(DefaultCommandResult.forError(target, result));
 			error(result);
 		}
 		else {
-			cr = DefaultCommandResult.forCompletion(target, result);
+			afterCompletion(DefaultCommandResult.forCompletion(target, result));
 			complete(result);
 		}
-		lifecycle.afterCompletion(target, cr);
+ 	}
+ 	
+ 	private function afterCompletion (cr: CommandResult): void {
+ 		lifecycle.afterCompletion(target, cr);
  	}
  	
  	private function isError (result:Object) : Boolean {
@@ -229,7 +231,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	 */
 	protected override function doCancel () : void {
 		cancelMethod.invoke(target, []);
-		lifecycle.afterCompletion(target, DefaultCommandResult.forCancellation(this));
+		afterCompletion(DefaultCommandResult.forCancellation(this));
 	}
 
 	
