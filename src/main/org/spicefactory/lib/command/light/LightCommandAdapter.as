@@ -20,11 +20,14 @@ import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.base.AbstractSuspendableCommand;
 import org.spicefactory.lib.command.base.DefaultCommandResult;
+import org.spicefactory.lib.command.builder.CommandProxyBuilder;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.data.DefaultCommandData;
 import org.spicefactory.lib.command.events.CommandEvent;
 import org.spicefactory.lib.command.lifecycle.CommandLifecycle;
 import org.spicefactory.lib.command.lifecycle.DefaultCommandLifecycle;
+import org.spicefactory.lib.command.proxy.CommandProxy;
+import org.spicefactory.lib.command.result.ResultProcessors;
 import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.reflect.Method;
 import org.spicefactory.lib.reflect.Parameter;
@@ -57,6 +60,8 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	
 	private var _lifecycle:CommandLifecycle;
 	private var _data:DefaultCommandData;
+	
+	private var resultProcessor: CommandProxy;
 	
 	
 	private static const errorTypes:Array = [Error, ErrorEvent];
@@ -102,7 +107,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	 * @inheritDoc
 	 */
 	public function get cancellable () : Boolean {
-		return (cancelMethod != null);
+		return (resultProcessor) ? resultProcessor.cancellable : (cancelMethod != null);
 	}
 
 	/**
@@ -158,13 +163,11 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 			else {
 				if (executeMethod.returnType.getClass() != Void) {
 					var result:Object = executeMethod.invoke(target, params);
-					afterCompletion(DefaultCommandResult.forCompletion(target, result));
-					complete(result);
+					handleResult(result);
 				}
 				else {
 					executeMethod.invoke(target, params);
-					afterCompletion(DefaultCommandResult.forCompletion(target, null));
-					complete();
+					handleResult(null);
 				}
 			}
 		}
@@ -201,18 +204,55 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 			throw new IllegalStateError("Callback invoked although command " + target + " is not active");
 		}
 		if (result === undefined) {
-			// do not call cancel to bypass doCancel
-			afterCompletion(DefaultCommandResult.forCancellation(target));
-			dispatchEvent(new CommandEvent(CommandEvent.CANCEL));	
+			handleCancellation();
 		}
 		else if (isError(result)) {
-			afterCompletion(DefaultCommandResult.forError(target, result));
-			error(result);
+			handleError(result);
 		}
 		else {
-			afterCompletion(DefaultCommandResult.forCompletion(target, result));
-			complete(result);
+			handleResult(result);
 		}
+ 	}
+ 	
+ 	private function handleResult (result: Object): void {
+ 		var builder:CommandProxyBuilder = (result) ? ResultProcessors.newProcessor(target, result) : null;
+		if (builder) {
+			processResult(builder);
+		}
+		else {
+			handleCompletion(result);				
+		}
+ 	}
+ 	
+ 	private function handleCompletion (result: Object): void {
+ 		afterCompletion(DefaultCommandResult.forCompletion(target, result));
+ 		resultProcessor = null;
+ 		complete(result);
+ 	}
+ 	
+ 	private function handleError (cause: Object): void {
+ 		afterCompletion(DefaultCommandResult.forError(target, cause));
+		resultProcessor = null;
+		error(cause);
+ 	}
+ 	
+ 	private function handleCancellation (): void {
+ 		// do not call cancel to bypass doCancel
+		afterCompletion(DefaultCommandResult.forCancellation(target));
+		resultProcessor = null;
+ 		dispatchEvent(new CommandEvent(CommandEvent.CANCEL));	
+ 	}
+ 	
+ 	private function processResult (builder: CommandProxyBuilder): void {
+ 		resultProcessor = builder
+ 			.domain(executeMethod.owner.applicationDomain)
+ 			.result(function (result: Object): void { 
+ 				handleCompletion(result); })
+ 			.error(function (cause: Object): void { 
+ 				handleError(cause); })
+ 			.cancel(function (): void { 
+ 				handleCancellation(); })
+ 			.execute();
  	}
  	
  	private function afterCompletion (cr: CommandResult): void {
@@ -230,7 +270,14 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	 * @private
 	 */
 	protected override function doCancel () : void {
-		cancelMethod.invoke(target, []);
+		if (resultProcessor) 
+		{
+			resultProcessor.cancel();
+			resultProcessor = null;
+		}
+		else {
+			cancelMethod.invoke(target, []);
+		}
 		afterCompletion(DefaultCommandResult.forCancellation(this));
 	}
 

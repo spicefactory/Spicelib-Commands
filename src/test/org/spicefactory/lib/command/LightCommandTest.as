@@ -29,22 +29,14 @@ import org.spicefactory.lib.command.builder.Commands;
 import org.spicefactory.lib.command.events.CommandFailure;
 import org.spicefactory.lib.command.events.CommandResultEvent;
 import org.spicefactory.lib.command.events.CommandTimeout;
-import org.spicefactory.lib.command.impl.AsyncLightCommand;
-import org.spicefactory.lib.command.impl.AsyncLightFlowCommand;
-import org.spicefactory.lib.command.impl.AsynchronousCommand;
-import org.spicefactory.lib.command.impl.CancellableLightCommand;
-import org.spicefactory.lib.command.impl.FullCommand;
-import org.spicefactory.lib.command.impl.LightFlowCommand;
-import org.spicefactory.lib.command.impl.SyncLightCommand;
-import org.spicefactory.lib.command.impl.SyncLightConstructorInjectionCommand;
-import org.spicefactory.lib.command.impl.SyncLightDataCommand;
-import org.spicefactory.lib.command.impl.SyncLightOptionalDataCommand;
-import org.spicefactory.lib.command.impl.SyncLightResultCommand;
-import org.spicefactory.lib.command.impl.SynchronousCommand;
+import org.spicefactory.lib.command.impl.*;
+import org.spicefactory.lib.command.model.AsyncResult;
 import org.spicefactory.lib.command.model.CommandModel;
 import org.spicefactory.lib.command.proxy.CommandProxy;
+import org.spicefactory.lib.command.result.ResultProcessors;
 import org.spicefactory.lib.command.util.CommandEventCounter;
 import org.spicefactory.lib.errors.IllegalStateError;
+import org.spicefactory.lib.errors.NestedError;
 
 /**
  * @author Jens Halm
@@ -55,6 +47,16 @@ public class LightCommandTest {
 	private var events: CommandEventCounter;
 	private var proxy: CommandProxy;
 	
+	
+	[BeforeClass]
+	public static function addProcessor (): void {
+		if (!ResultProcessors.forResultType(AsyncResult).exists) {
+			ResultProcessors.forResultType(AsyncResult).processorType(AsyncResultProcessor);
+		}
+		if (!ResultProcessors.forCommandType(CommandWithProcessor).exists) {
+			ResultProcessors.forCommandType(CommandWithProcessor).processorType(SyncResultProcessor);
+		}
+	}
 	
 	[Before]
 	public function setup (): void {
@@ -230,6 +232,69 @@ public class LightCommandTest {
 		async.invokeCallback(new IllegalStateError());
 		assertError(IllegalStateError);
 	}
+	
+	[Test]
+	public function resultProcessorSuccess (): void {
+		var result: AsyncResult = new AsyncResult();
+		var async: AsyncResultCommand = new AsyncResultCommand(result);
+		build(async);
+		assertInactive();
+		proxy.execute();
+		assertActive();
+		result.invokeCompleteHandler("foo");
+		assertResult("foo");
+	}
+	
+	[Test]
+	public function resultProcessorError (): void {
+		var result: AsyncResult = new AsyncResult();
+		var async: AsyncResultCommand = new AsyncResultCommand(result);
+		build(async);
+		assertInactive();
+		proxy.execute();
+		assertActive();
+		result.invokeErrorHandler(new IllegalStateError("Expected Error"));
+		assertError(NestedError);
+	}
+	
+	[Test]
+	public function cancelResultProcessor (): void {
+		var result: AsyncResult = new AsyncResult();
+		var async: AsyncResultCommand = new AsyncResultCommand(result);
+		build(async);
+		assertInactive();
+		proxy.execute();
+		assertActive();
+		result.cancel();
+		assertCancelled();
+	}
+	
+	[Test]
+	public function cancelProxyWithResultProcessor (): void {
+		AsyncResultProcessor.cancellations = 0;
+		var result: AsyncResult = new AsyncResult();
+		var async: AsyncResultCommand = new AsyncResultCommand(result);
+		build(async);
+		assertInactive();
+		proxy.execute();
+		assertActive();
+		proxy.cancel();
+		assertCancelled();
+		assertThat(AsyncResultProcessor.cancellations, equalTo(1));
+	}
+	
+	[Test]
+	public function resultProcessorByCommandType (): void {
+		var com: CommandWithProcessor = new CommandWithProcessor("foo");
+		build(com);
+		assertInactive();
+		proxy.execute();
+		assertCompleted();
+		var result: Object = events.getResult();
+		assertThat(result, isA(CommandModel));
+		assertThat(CommandModel(result).value, equalTo("foo"));
+	}
+	
 
 
 	private function build (com: Object): void {
@@ -282,9 +347,18 @@ public class LightCommandTest {
 		events.assertCallbacks(0, 1);
 		assertThat(events.getError(), isA(CommandFailure));
 		var failure:CommandFailure = CommandFailure(events.getError());
-		assertThat(failure.cause, isA(expectedCause));
+		assertThat(rootCause(failure.cause), isA(expectedCause));
 		assertThat(failure.executor, sameInstance(proxy));
 		assertThat(failure.target, sameInstance(proxy.target));
+	}
+	
+	private function rootCause (error: Object): Object {
+		if (error is CommandFailure) {
+			return rootCause(CommandFailure(error).cause);
+		}
+		else {
+			return error;
+		}
 	}
 	
 	private function assertCancelled (): void {
