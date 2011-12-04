@@ -76,6 +76,21 @@ public class CommandFailure {
 	}
 	
 	/**
+	 * The root cause of the error in case of nested commands.
+	 * When executing a command sequence or flow the individual
+	 * commands might themselves be sequences or flows. In this
+	 * case the <code>cause</code> property may hold another
+	 * instance of <code>CommandFailure</code>. This property
+	 * always returns the root cause as produced by the actual
+	 * target command.
+	 */
+	public function get rootCause (): Object {
+		return (cause is CommandFailure) 
+			? CommandFailure(cause).rootCause
+			: cause;
+	}
+	
+	/**
 	 * A textual representation of the failure.
 	 */
 	public function get message () : String {

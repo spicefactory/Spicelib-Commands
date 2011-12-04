@@ -347,18 +347,9 @@ public class LightCommandTest {
 		events.assertCallbacks(0, 1);
 		assertThat(events.getError(), isA(CommandFailure));
 		var failure:CommandFailure = CommandFailure(events.getError());
-		assertThat(rootCause(failure.cause), isA(expectedCause));
+		assertThat(failure.rootCause, isA(expectedCause));
 		assertThat(failure.executor, sameInstance(proxy));
 		assertThat(failure.target, sameInstance(proxy.target));
-	}
-	
-	private function rootCause (error: Object): Object {
-		if (error is CommandFailure) {
-			return rootCause(CommandFailure(error).cause);
-		}
-		else {
-			return error;
-		}
 	}
 	
 	private function assertCancelled (): void {
