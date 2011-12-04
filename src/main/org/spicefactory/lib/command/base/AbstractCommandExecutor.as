@@ -317,7 +317,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	 * @private
 	 */
 	public override function suspend () : void {
-		if (!suspendable) throw new IllegalStateError("Command group '" + this + "' cannot be suspended");
+		if (!suspendable) throw new IllegalStateError("Command '" + this + "' cannot be suspended");
  		super.suspend();
 	}
 	
@@ -325,7 +325,7 @@ public class AbstractCommandExecutor extends AbstractSuspendableCommand implemen
 	 * @private
 	 */	
 	public override function cancel () : void {
-		if (!cancellable) throw new IllegalStateError("Command group '" + this + "' cannot be cancelled");
+		if (!cancellable) throw new IllegalStateError("Command '" + this + "' cannot be cancelled");
 		super.cancel();
 	}
 	
