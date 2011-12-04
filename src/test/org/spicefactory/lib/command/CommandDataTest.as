@@ -26,9 +26,9 @@ import org.spicefactory.lib.command.builder.CommandGroupBuilder;
 import org.spicefactory.lib.command.builder.Commands;
 import org.spicefactory.lib.command.data.CommandData;
 import org.spicefactory.lib.command.impl.AsynchronousCommand;
-import org.spicefactory.lib.command.impl.CommandModel;
 import org.spicefactory.lib.command.impl.SyncLightDataCommand;
 import org.spicefactory.lib.command.impl.SyncLightResultCommand;
+import org.spicefactory.lib.command.model.CommandModel;
 /**
  * @author Jens Halm
  */

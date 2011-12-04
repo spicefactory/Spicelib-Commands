@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.spicefactory.lib.command.impl {
+package org.spicefactory.lib.command.model {
 /**
  * @author Jens Halm
  */

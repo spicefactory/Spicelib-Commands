@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.spicefactory.lib.command.impl {
+import org.spicefactory.lib.command.model.CommandModel;
 
 /**
  * @author Jens Halm

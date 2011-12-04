@@ -15,6 +15,7 @@
  */
 package org.spicefactory.lib.command {
 
+import flash.geom.Rectangle;
 import org.flexunit.assertThat;
 import org.flexunit.async.Async;
 import org.hamcrest.core.isA;
@@ -27,15 +28,14 @@ import org.spicefactory.lib.command.events.CommandResultEvent;
 import org.spicefactory.lib.command.events.CommandTimeout;
 import org.spicefactory.lib.command.flow.CommandLinkProcessor;
 import org.spicefactory.lib.command.impl.AsyncLightFlowCommand;
-import org.spicefactory.lib.command.impl.CommandModel;
 import org.spicefactory.lib.command.impl.LightFlowCommand;
 import org.spicefactory.lib.command.impl.SyncLightDataCommand;
+import org.spicefactory.lib.command.model.CommandModel;
 import org.spicefactory.lib.command.model.FlowModel;
 import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.command.util.CommandEventCounter;
 import org.spicefactory.lib.errors.IllegalStateError;
 
-import flash.geom.Rectangle;
 /**
  * @author Jens Halm
  */
