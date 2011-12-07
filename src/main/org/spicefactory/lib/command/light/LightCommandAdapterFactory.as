@@ -59,13 +59,21 @@ public class LightCommandAdapterFactory implements CommandAdapterFactory {
 		if (cancel && cancel.parameters.length > 0) {
 			cancel = null;
 		}
+		var result:Method = info.getMethod("result");
+		if (result && result.parameters.length != 1) {
+			result = null;
+		}
+		var error:Method = info.getMethod("error");
+		if (error && error.parameters.length != 1) {
+			error = null;
+		}
 		if (async) {
 			if (execute.returnType.getClass() != Void) {
 				throw new IllegalStateError("Asynchronous light commands with a callback parameter"
 				 + " must have a void return type");
 			}
 		}
-		return new LightCommandAdapter(instance, execute, callback, cancel, async);
+		return new LightCommandAdapter(instance, execute, callback, cancel, result, error, async);
 	}
 	
 	

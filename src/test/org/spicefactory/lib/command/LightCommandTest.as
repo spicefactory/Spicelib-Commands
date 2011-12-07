@@ -15,6 +15,7 @@
  */
 package org.spicefactory.lib.command {
 
+import org.spicefactory.lib.errors.CompoundError;
 import org.flexunit.assertThat;
 import org.flexunit.async.Async;
 import org.hamcrest.core.isA;
@@ -293,6 +294,30 @@ public class LightCommandTest {
 		var result: Object = events.getResult();
 		assertThat(result, isA(CommandModel));
 		assertThat(CommandModel(result).value, equalTo("foo"));
+	}
+	
+	[Test]
+	public function resultHandlerInCommand (): void {
+		var result: AsyncResult = new AsyncResult();
+		var async: AsyncResultCommandWithHandlers = new AsyncResultCommandWithHandlers(result);
+		build(async);
+		assertInactive();
+		proxy.execute();
+		assertActive();
+		result.invokeCompleteHandler("foo");
+		assertResult("foo:modified");
+	}
+	
+	[Test]
+	public function errorHandlerInCommand (): void {
+		var result: AsyncResult = new AsyncResult();
+		var async: AsyncResultCommandWithHandlers = new AsyncResultCommandWithHandlers(result);
+		build(async);
+		assertInactive();
+		proxy.execute();
+		assertActive();
+		result.invokeErrorHandler(new IllegalStateError("Expected Error"));
+		assertError(CompoundError);
 	}
 	
 

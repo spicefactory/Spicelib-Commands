@@ -57,6 +57,8 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	private var callbackProperty:Property;
 	private var executeMethod:Method;
 	private var cancelMethod:Method;
+	private var resultMethod:Method;
+	private var errorMethod:Method;
 	
 	private var _lifecycle:CommandLifecycle;
 	private var _data:DefaultCommandData;
@@ -74,6 +76,21 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	public static function addErrorType (type:Class) : void {
 		errorTypes.push(type);
 	}
+	
+	/**
+	 * Indicates whether the specified result value represents a known
+	 * error type.
+	 * 
+	 * @param result the result instance to check
+	 * @return true if the specified result value represents a known
+	 * error type
+	 */
+	public static function isErrorType (result: Object): Boolean {
+		for each (var errorType:Class in errorTypes) {
+ 			if (result is errorType) return true;
+ 		}
+ 		return false;
+	}
  	
 	
 	/**
@@ -86,11 +103,14 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 	 * @param async flag indicating whether this command executes asynchronously
 	 */
 	function LightCommandAdapter (target:Object, executeMethod:Method, 
-			callback:Property, cancelMethod:Method, async:Boolean) {
+			callback:Property, cancelMethod:Method, resultMethod:Method, 
+			errorMethod:Method, async:Boolean) {
 		_target = target;
 		this.callbackProperty = callback;
 		this.executeMethod = executeMethod;
 		this.cancelMethod = cancelMethod;
+		this.resultMethod = resultMethod;
+		this.errorMethod = errorMethod;
 		this.async = async;
 		_data = new DefaultCommandData();
 	}
@@ -206,7 +226,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
 		if (result === undefined) {
 			handleCancellation();
 		}
-		else if (isError(result)) {
+		else if (isErrorType(result)) {
 			handleError(result);
 		}
 		else {
@@ -225,15 +245,38 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
  	}
  	
  	private function handleCompletion (result: Object): void {
+ 		result = invokeResultHandler(resultMethod, result);
+ 		if (isErrorType(result)) {
+ 			handleError(result);
+ 			return;
+ 		}
  		afterCompletion(DefaultCommandResult.forCompletion(target, result));
  		resultProcessor = null;
  		complete(result);
  	}
  	
  	private function handleError (cause: Object): void {
+ 		cause = invokeResultHandler(errorMethod, cause);
  		afterCompletion(DefaultCommandResult.forError(target, cause));
 		resultProcessor = null;
 		error(cause);
+ 	}
+ 	
+ 	private function invokeResultHandler (method: Method, value: Object): Object {
+ 		if (!method) return value;
+ 		try {
+ 			if (method.returnType.getClass() == Void) {
+ 				method.invoke(target, [value]);
+ 				return value;
+ 			}
+ 			else {
+ 				return method.invoke(target, [value]);
+ 			}
+ 		}
+ 		catch (e: Error) {
+ 			return e;
+ 		}
+ 		return null; // unreachable, but mxmlc is stupid
  	}
  	
  	private function handleCancellation (): void {
@@ -259,13 +302,6 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
  		lifecycle.afterCompletion(target, cr);
  	}
  	
- 	private function isError (result:Object) : Boolean {
- 		for each (var type:Class in errorTypes) {
- 			if (result is type) return true;
- 		}
- 		return false;
- 	}
-	
 	/**
 	 * @private
 	 */
