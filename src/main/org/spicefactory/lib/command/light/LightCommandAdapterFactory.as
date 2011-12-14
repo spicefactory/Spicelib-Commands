@@ -18,6 +18,7 @@ package org.spicefactory.lib.command.light {
 
 import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.adapter.CommandAdapterFactory;
+import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.errors.IllegalStateError;
 import org.spicefactory.lib.reflect.ClassInfo;
 import org.spicefactory.lib.reflect.Method;
@@ -34,6 +35,20 @@ import flash.system.ApplicationDomain;
  * @author Jens Halm
  */
 public class LightCommandAdapterFactory implements CommandAdapterFactory {
+
+
+	private static var registered: Boolean;
+
+	/**
+	 * Registers this adapter, making Light Commands available for all command
+	 * builder types. Calling this method more than once has no effect.
+	 */
+	public static function register (): void {
+		if (!registered) {
+			registered = true;
+			CommandAdapters.addFactory(new LightCommandAdapterFactory());
+		}
+	}
 
 
 	/**

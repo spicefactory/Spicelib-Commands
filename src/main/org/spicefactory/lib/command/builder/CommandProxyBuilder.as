@@ -16,6 +16,7 @@
  
 package org.spicefactory.lib.command.builder {
 
+import org.spicefactory.lib.command.light.LightCommandAdapterFactory;
 import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.command.proxy.DefaultCommandProxy;
 import org.spicefactory.lib.logging.LogUtil;
@@ -128,7 +129,7 @@ public class CommandProxyBuilder extends AbstractCommandBuilder {
 	 */
 	public override function build () : CommandProxy {
 		if (target is Class) {
-			initializeLightAdapter();
+			LightCommandAdapterFactory.register();
 			setType(target as Class);
 		}
 		else {

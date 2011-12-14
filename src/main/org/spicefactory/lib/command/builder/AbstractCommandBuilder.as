@@ -16,11 +16,11 @@
 
 package org.spicefactory.lib.command.builder {
 
-import org.spicefactory.lib.command.light.LightCommandAdapterFactory;
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.adapter.CommandAdapters;
 import org.spicefactory.lib.command.events.CommandEvent;
 import org.spicefactory.lib.command.events.CommandResultEvent;
+import org.spicefactory.lib.command.light.LightCommandAdapterFactory;
 import org.spicefactory.lib.command.proxy.CommandProxy;
 import org.spicefactory.lib.command.proxy.DefaultCommandProxy;
 import org.spicefactory.lib.reflect.ClassInfo;
@@ -40,8 +40,6 @@ public class AbstractCommandBuilder implements CommandBuilder {
 	private var proxy:DefaultCommandProxy;
 	private var _domain:ApplicationDomain;
 	
-	private static var lightAdapterInitialized: Boolean;
-
 
 	/**
 	 * Creates a new instance. If no proxy gets passed to this constructor
@@ -169,11 +167,11 @@ public class AbstractCommandBuilder implements CommandBuilder {
 			return CommandBuilder(command).build();
 		}
 		else if (command is Class) {
-			initializeLightAdapter();
+			LightCommandAdapterFactory.register();
 			return Commands.create(command as Class).build();
 		}
 		else {
-			initializeLightAdapter();
+			LightCommandAdapterFactory.register();
 			return CommandAdapters.createAdapter(command, domain);
 		}
 	}
@@ -193,14 +191,6 @@ public class AbstractCommandBuilder implements CommandBuilder {
 	public function build () : CommandProxy {
 		proxy.domain = domain;
 		return proxy;
-	}
-	
-	
-	protected static function initializeLightAdapter (): void {
-		if (!lightAdapterInitialized) {
-			lightAdapterInitialized = true;
-			CommandAdapters.addFactory(new LightCommandAdapterFactory());
-		}
 	}
 	
 	
