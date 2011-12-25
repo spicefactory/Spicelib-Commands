@@ -121,7 +121,7 @@ class ResultPropertyCondition implements LinkCondition {
 	public function matches (result:CommandResult) : Boolean {
 		return result.complete 
 			&& (result.value.hasOwnProperty(name) 
-			&& result.value[name] === value);
+			&& result.value[name] == value);
 	}
 	
 }
