@@ -283,7 +283,7 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
  	
  	private function getParam (method: Method, value: Object): Object {
  		if (value is CommandFailure) {
- 			if (!method.returnType.isType(CommandFailure)) {
+ 			if (!method.parameters[0].isType(CommandFailure)) {
  				return CommandFailure(value).rootCause;
  			}
  		}
