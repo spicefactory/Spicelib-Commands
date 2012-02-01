@@ -16,6 +16,7 @@
 
 package org.spicefactory.lib.command.light {
 
+import org.spicefactory.lib.command.events.CommandFailure;
 import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.adapter.CommandAdapter;
 import org.spicefactory.lib.command.base.AbstractSuspendableCommand;
@@ -264,19 +265,29 @@ public class LightCommandAdapter extends AbstractSuspendableCommand implements C
  	
  	private function invokeResultHandler (method: Method, value: Object): Object {
  		if (!method) return value;
+ 		var param:Object = getParam(method, value);
  		try {
  			if (method.returnType.getClass() == Void) {
- 				method.invoke(target, [value]);
+ 				method.invoke(target, [param]);
  				return value;
  			}
  			else {
- 				return method.invoke(target, [value]);
+ 				return method.invoke(target, [param]);
  			}
  		}
  		catch (e: Error) {
  			return e;
  		}
  		return null; // unreachable, but mxmlc is stupid
+ 	}
+ 	
+ 	private function getParam (method: Method, value: Object): Object {
+ 		if (value is CommandFailure) {
+ 			if (!method.returnType.isType(CommandFailure)) {
+ 				return CommandFailure(value).rootCause;
+ 			}
+ 		}
+ 		return value;
  	}
  	
  	private function handleCancellation (): void {
