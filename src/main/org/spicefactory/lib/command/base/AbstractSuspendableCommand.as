@@ -27,7 +27,7 @@ import org.spicefactory.lib.logging.Logger;
  * <p>A subclass of AbstractCancellableCommand is expected
  * to override the <code>doStart</code>, <code>doCancel</code>, <code>doSuspend</code> and <code>doResume</code>
  * methods and perform the necessary operations, and then call <code>complete</code>
- * when the operation is done (or <code>error</code> when the command fails to complete successfully).
+ * when the operation is done (or <code>error</code> when the command fails to complete successfully).</p>
  * 
  * @author Jens Halm
  */

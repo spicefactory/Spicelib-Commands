@@ -30,7 +30,7 @@ import flash.system.ApplicationDomain;
  * 
  * <p>This implementation uses the specified CommandData to peform constructor
  * injection when creating a new command instance. The <code>beforeExecution</code>
- * and <code>afterCompletion</code> hooks in this implementation do nothing.
+ * and <code>afterCompletion</code> hooks in this implementation do nothing.</p>
  * 
  * @author Jens Halm
  */
