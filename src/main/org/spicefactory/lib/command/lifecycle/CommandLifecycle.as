@@ -18,7 +18,9 @@ package org.spicefactory.lib.command.lifecycle {
 
 import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.data.CommandData;
-	
+
+import flash.system.ApplicationDomain;
+
 /**
  * Represents the lifecycle of a command.
  * This is a hook that can be used by frameworks to add functionality to the command execution.
@@ -60,6 +62,9 @@ public interface CommandLifecycle {
 	 */
 	function afterCompletion (command:Object, result:CommandResult) : void;
 	
-	
+	/**
+	 * Lifecycle access to the domain for this command.
+	 */
+	function get domain () : ApplicationDomain;
 }
 }

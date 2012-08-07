@@ -37,7 +37,7 @@ import flash.system.ApplicationDomain;
 public class DefaultCommandLifecycle implements CommandLifecycle {
 
 
-	private var domain:ApplicationDomain;
+	private var _domain:ApplicationDomain;
 
 
 	/**
@@ -46,7 +46,7 @@ public class DefaultCommandLifecycle implements CommandLifecycle {
 	 * @param domain the domain to use for reflecting on command classes
 	 */
 	function DefaultCommandLifecycle (domain:ApplicationDomain = null) {
-		this.domain = domain;
+		_domain = domain;
 	}
 
 	
@@ -54,7 +54,7 @@ public class DefaultCommandLifecycle implements CommandLifecycle {
 	 * @inheritDoc
 	 */
 	public function createInstance (type:Class, data:CommandData) : Object {
-		var info:ClassInfo = ClassInfo.forClass(type, domain);
+		var info:ClassInfo = ClassInfo.forClass(type, _domain);
 		var params:Array = [];
 		for each (var param:Parameter in info.getConstructor().parameters) {
 			var value:Object = data.getObject(param.type.getClass());
@@ -86,6 +86,13 @@ public class DefaultCommandLifecycle implements CommandLifecycle {
 		/* default implementation does nothing */
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
+	public function get domain () : ApplicationDomain {
+		return _domain;
+	}
+
 	
 }
 }
