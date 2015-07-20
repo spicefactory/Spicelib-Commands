@@ -16,6 +16,9 @@
  
 package org.spicefactory.lib.command.group {
 
+import flash.system.Capabilities;
+import flash.utils.setTimeout;
+
 import org.spicefactory.lib.command.Command;
 import org.spicefactory.lib.command.CommandResult;
 import org.spicefactory.lib.command.base.AbstractCommandExecutor;
@@ -38,6 +41,7 @@ public class CommandSequence extends AbstractCommandExecutor implements CommandG
 		
 	
 	private static var logger:Logger = LogContext.getLogger(CommandSequence);
+	private static var isExecutedOnMac:Boolean = Capabilities.os.indexOf("Mac") > -1;
 
 	
 	private var commands:Array = new Array();
@@ -88,9 +92,25 @@ public class CommandSequence extends AbstractCommandExecutor implements CommandG
 		} else {
 			var com:Command = commands[currentIndex] as Command;
 			logger.info("Executing next command {0} in sequence {1}", com, this);
+			performSafeCommandExecution(com);
+		}
+	}
+	
+	/**
+	 * For Mac OS execution of commands is batched for no more than 50 commands per frame.
+	 * This helps to avoid StackOverflowError which could have been thrown for execution of
+	 * large (>100 commands) sequence of commands in single frame which would exceed default
+	 * recursion limit.
+	 *
+	 * @param com one of sequence commands
+	 */
+	private function performSafeCommandExecution (com:Command) : void {
+		if (isExecutedOnMac && currentIndex % 50 == 0) {
+			setTimeout(executeCommand, 0, com);
+		} else {
 			executeCommand(com);
 		}
-	}	
+	}
 		
 		
 }
