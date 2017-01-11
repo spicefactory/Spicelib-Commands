@@ -121,7 +121,7 @@ public class DefaultCommandProxy extends AbstractCommandExecutor implements Comm
 				var target:Object = lifecycle.createInstance(_type, data);
 				_target = (target is Command)
 					? target as Command
-					: CommandAdapters.createAdapter(target);
+					: CommandAdapters.createAdapter(target, lifecycle.domain);
 			}
 			catch (e:Error) {
 				error(new CommandFailure(this, _target, e));
